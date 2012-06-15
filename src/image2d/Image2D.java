@@ -13,7 +13,7 @@ public class Image2D {
 
     public Image2D() {
         String url = "test.jpg";
-        BufferedImage image  = ImageProcessor.load_image(url);
+        BufferedImage image = ImageProcessor.load_image(url);
         image = ImageProcessor.gaussianFillter(image);
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
@@ -22,6 +22,7 @@ public class Image2D {
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add("Center", iPanel);
         frame.setSize(image.getWidth(), image.getHeight());
+        frame.setLocation(480, 200);
         frame.setVisible(true);
 
     }
