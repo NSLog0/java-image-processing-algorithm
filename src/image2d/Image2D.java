@@ -5,9 +5,9 @@
 package image2d;
 
 //import java.awt.Graphics2D;
+import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
 
 public class Image2D {
 
