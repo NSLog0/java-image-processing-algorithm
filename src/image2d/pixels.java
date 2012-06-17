@@ -31,6 +31,5 @@ public class pixels {
      * public static int img_Heigth(int _h) { int height = _h; return height; }
      *
      * public static int img_wight(int _w) { int wight = _w; return wight; }
-     *
      */
 }
