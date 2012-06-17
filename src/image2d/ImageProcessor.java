@@ -35,15 +35,15 @@ public class ImageProcessor {
     public static BufferedImage convolution(BufferedImage _images, float kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = _images.getSubimage(0, 0, wigth, height);       // Set initial BufferedImage
         int r = 0, g = 0, b = 0;            // Store channel color RGB 
-        int pixels[][] = new int[wigth][height]; // Initial array Store image to array and size equal Image size
+        int pixel[][] = pixels.getPixels(imageOutput); // Initial array Store image to array and size equal Image size
 
-
+        
         // calculate imageInput --------------------
         for (int i = 0; i < wigth; i++) {
             for (int j = 0; j < height; j++) {
 
                 // get pixels to array
-                pixels[i][j] = imageOutput.getRGB(i, j);
+//                pixels[i][j] = imageOutput.getRGB(i, j);
                 for (int k = i; k < sizeKernel - 1; k++) {
                     for (int l = j; l < sizeKernel - 1; l++) {
 
@@ -53,9 +53,9 @@ public class ImageProcessor {
                             //try {
 
                             // calculate a RGB by chip bit
-                            r += RGB.red(pixels, xLocat, yLocat) * kernel[i-k/16][j-l/16];
-                            g += RGB.green(pixels, xLocat, yLocat) * kernel[i-k/16][j-l/16];
-                            b += RGB.blue(pixels, xLocat, yLocat) * kernel[i-k/16][j-l/16];
+                            r += RGB.red(pixel, xLocat, yLocat) * kernel[i - k / 16][j - l / 16];
+                            g += RGB.green(pixel, xLocat, yLocat) * kernel[i - k / 16][j - l / 16];
+                            b += RGB.blue(pixel, xLocat, yLocat) * kernel[i - k / 16][j - l / 16];
 
                             int rgb = (r << 16) | (g << 8) | b;
 
