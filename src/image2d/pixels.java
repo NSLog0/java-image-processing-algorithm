@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 public class pixels {
 
     //  static int w, h;
+    // use for store pixel image  to array 
     public static int[][] getPixels(BufferedImage image) {
         int pixel[][] = new int[image.getWidth()][image.getHeight()];
         for (int i = 0; i < image.getWidth(); i++) {
@@ -20,6 +21,7 @@ public class pixels {
                 pixel[i][j] = image.getRGB(i, j);
             }
         }
+        // return pixels
         return pixel;
     }
 
