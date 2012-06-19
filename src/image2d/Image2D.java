@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 public class Image2D {
 
     public Image2D() {
-        String url = "test.jpg";
+        String url = "kennen.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
         image = ImageProcessor.gaussianFillter(image);
         JFrame frame = new JFrame("Display Image");
