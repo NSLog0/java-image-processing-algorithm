@@ -47,8 +47,8 @@ public class ImageProcessor {
                 //g = RGB.green(pixel, i, j);
                 //b = RGB.blue(pixel, i, j);
 
-                for (int k = i; k < sizeKernel - 1; k++) {
-                    for (int l = j; l < sizeKernel - 1; l++) {
+                for (int k = i; k < sizeKernel-1; k++) {
+                    for (int l = j; l < sizeKernel-1; l++) {
 
                         //int xLocat = i + (k - kernelXY);
                         //int yLocat = j + (l - kernelXY);
@@ -59,7 +59,7 @@ public class ImageProcessor {
                         r += RGB.red(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
                         g += RGB.green(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
                         b += RGB.blue(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
-                        System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
+                        //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
                         int rgb = (r << 16) | (g << 8) | b;
 
                         //set RGB revert to image
