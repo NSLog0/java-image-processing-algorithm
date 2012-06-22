@@ -4,7 +4,6 @@
  */
 package image2d;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -41,23 +40,21 @@ public class ImageProcessor {
 
 
         // calculate imageInput --------------------
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < wigth; j++) {
+        for (int i = 0; i < wigth; i++) {
+            for (int j = 0; j < height; j++) {
                 // System.out.printf("%d,%d=\n", i, j);
-                // get pixels to array ** old **
-                //pixels[i][j] = imageOutput.getRGB(i, j); ** old **
-//                r = RGB.red(pixel, i, j);
-//                g = RGB.green(pixel, i, j);
-//                b = RGB.blue(pixel, i, j);
+                //r = RGB.red(pixel, i, j);
+                //g = RGB.green(pixel, i, j);
+                //b = RGB.blue(pixel, i, j);
 
                 for (int k = i; k < sizeKernel - 1; k++) {
                     for (int l = j; l < sizeKernel - 1; l++) {
 
-//                        int xLocat = i + (k - kernelXY);
-//                        int yLocat = j + (l - kernelXY);
+                        //int xLocat = i + (k - kernelXY);
+                        //int yLocat = j + (l - kernelXY);
 
                         //if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
-                        //try {
+
                         // calculate a RGB by chip bit
                         r += RGB.red(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
                         g += RGB.green(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
@@ -67,10 +64,6 @@ public class ImageProcessor {
 
                         //set RGB revert to image
                         imageOutput.setRGB(i, j, rgb);
-
-                        //  } catch (Exception e) {
-                        //      System.out.println(e.getMessage());
-                        //  }
                         // } // end if
                         //end j
                     }
