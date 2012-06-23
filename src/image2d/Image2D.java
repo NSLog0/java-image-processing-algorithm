@@ -14,7 +14,7 @@ public class Image2D {
     public Image2D() {
         String url = "icon.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
-        image = ImageProcessor.gaussianFillter(image);
+        image = ImageProcessor.gaussianFillter(image,3,3,0.8);
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
 
@@ -22,6 +22,7 @@ public class Image2D {
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add("Center", iPanel);
         frame.setSize(65, 134);
+        //  frame.setSize(image.getWidth(), image.getHeight());
         frame.setLocation(480, 200);
         frame.setVisible(true);
 

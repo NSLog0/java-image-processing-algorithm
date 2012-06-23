@@ -32,7 +32,7 @@ public class ImageProcessor {
     //---------------------------------end--------------------------------------
 
     // -----------------------------Convolution --------------------------------
-    public static BufferedImage convolution(BufferedImage _images, float kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
+    public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = _images.getSubimage(0, 0, wigth, height);       // Set initial BufferedImage
         int r = 0, g = 0, b = 0;            // Store channel color RGB 
         // Initial array Store image to array and size equal Image size
@@ -50,21 +50,21 @@ public class ImageProcessor {
                 for (int k = i; k < sizeKernel-1; k++) {
                     for (int l = j; l < sizeKernel-1; l++) {
 
-                        //int xLocat = i + (k - kernelXY);
-                        //int yLocat = j + (l - kernelXY);
+                        int xLocat = i + (k - kernelXY);
+                        int yLocat = j + (l - kernelXY);
 
-                        //if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
+                        if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
 
                         // calculate a RGB by chip bit
-                        r += RGB.red(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
-                        g += RGB.green(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
-                        b += RGB.blue(pixel, i, j) * (kernel[i - k + 1][j - l + 1]);
+                        r += RGB.red(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
+                        g += RGB.green(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
+                        b += RGB.blue(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
                         //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
                         int rgb = (r << 16) | (g << 8) | b;
 
                         //set RGB revert to image
                         imageOutput.setRGB(i, j, rgb);
-                        // } // end if
+                         } // end if
                         //end j
                     }
                     //end k
@@ -78,15 +78,19 @@ public class ImageProcessor {
 //----------------------------------end-----------------------------------------
 // -------------------------------Fillter --------------------------------------
 
-    public static BufferedImage gaussianFillter(BufferedImage _image) {
+    public static BufferedImage gaussianFillter(BufferedImage _image, int _height, int _wight, double sigma) {
 
-        // kernel gaussian
-        float gaussian[][] = {
-            {1, 2, 1},
-            {2, 4, 2},
-            {1, 2, 1}
-        };
-
+//        // kernel gaussian
+        double gaussian[][] = new double[_wight][_height];
+        for (int j = 0; j < _height; j++) {
+            for (int i = 0; i < _wight; i++) {
+                int xValue = i - (_wight / 2);
+                int yValue = j - (_height / 2);
+                gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
+                System.out.print(gaussian[i][j]);
+            }
+        }
+        
         // get value _image and kernel
         int wight = _image.getWidth(); // image wight
         int heigth = _image.getHeight(); // image hight 

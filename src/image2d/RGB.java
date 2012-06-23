@@ -7,7 +7,7 @@ package image2d;
 public class RGB {
 
     // shift bit red color
-    public static int red(int pixels[][], int x, int y) {
+    public static int red(int pixels[][], int y, int x) {
         int r = 0;
         r = (pixels[x][y] >> 16) & 0x000000FF;
         return r;
