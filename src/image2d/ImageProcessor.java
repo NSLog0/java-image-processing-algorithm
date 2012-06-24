@@ -33,38 +33,37 @@ public class ImageProcessor {
 
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
-        BufferedImage imageOutput = _images.getSubimage(0, 0, wigth, height);       // Set initial BufferedImage
-        int r = 0, g = 0, b = 0;            // Store channel color RGB 
+        BufferedImage imageOutput = _images;     // Set initial BufferedImage
+
         // Initial array Store image to array and size equal Image size
         int pixel[][] = pixels.getPixels(imageOutput);
 
-
         // calculate imageInput --------------------
-        for (int i = 0; i < wigth; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < wigth; ++i) {
+            for (int j = 0; j < height; ++j) {
                 // System.out.printf("%d,%d=\n", i, j);
                 //r = RGB.red(pixel, i, j);
                 //g = RGB.green(pixel, i, j);
                 //b = RGB.blue(pixel, i, j);
 
-                for (int k = i; k < sizeKernel-1; k++) {
-                    for (int l = j; l < sizeKernel-1; l++) {
-
-                        int xLocat = i + (k - kernelXY);
-                        int yLocat = j + (l - kernelXY);
-
-                        if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
+                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
+                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
+                        int r = 0, g = 0, b = 0;            // Store channel color RGB 
+//                        int xLocat = i + (k - kernelXY);
+//                        int yLocat = j + (l - kernelXY);
+//
+//                        if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
 
                         // calculate a RGB by chip bit
-                        r += RGB.red(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
-                        g += RGB.green(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
-                        b += RGB.blue(pixel, xLocat, yLocat) * (kernel[i - k + 1][j - l + 1]);
+                        r += RGB.red(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
                         //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
                         int rgb = (r << 16) | (g << 8) | b;
 
                         //set RGB revert to image
                         imageOutput.setRGB(i, j, rgb);
-                         } // end if
+                        //} // end if
                         //end j
                     }
                     //end k
@@ -87,15 +86,16 @@ public class ImageProcessor {
                 int xValue = i - (_wight / 2);
                 int yValue = j - (_height / 2);
                 gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
-                System.out.print(gaussian[i][j]);
+                //   System.out.print(gaussian[i][j]);
             }
         }
-        
+
         // get value _image and kernel
         int wight = _image.getWidth(); // image wight
         int heigth = _image.getHeight(); // image hight 
         int kernelSize = gaussian.length; // size kernel
         int kernelXY = kernelSize / 2; // find a center of kernel
+        System.out.println(kernelXY);
 
         // make a result with convolution method
         // return image result
