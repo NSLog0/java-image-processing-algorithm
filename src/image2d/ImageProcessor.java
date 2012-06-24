@@ -87,7 +87,7 @@ public class ImageProcessor {
                 int xValue = i - (_wight / 2);
                 int yValue = j - (_height / 2);
                 gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
-                System.out.print(gaussian[i][j]+" ");
+                System.out.print(gaussian[i][j] + " ");
                 //   System.out.print(gaussian[i][j]);
             }
             System.out.println(' ');
