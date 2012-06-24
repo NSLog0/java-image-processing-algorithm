@@ -14,7 +14,7 @@ public class Image2D {
     public Image2D() {
         String url = "cat.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
-        image = ImageProcessor.gaussianFillter(image,3,3,0.50);
+        image = ImageProcessor.gaussianFillter(image,5,5,0.86);
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
 

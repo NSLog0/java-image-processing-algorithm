@@ -36,37 +36,30 @@ public class ImageProcessor {
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = ImageProcessor.copyImg(_images);     // Set initial BufferedImage
-        int pixels; //use to store pixels
+        int pixel[][] = pixels.getPixels(_images); //use to store pixels
 
         // calculate image
-        for (int i = 0; i < wigth; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0 + kernelXY; i < wigth - kernelXY - 1; i++) {
+            for (int j = 0 + kernelXY; j < height - kernelXY - 1; j++) {
+                int r = 0, g = 0, b = 0; // store RGB
 
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
 
-                        int r = 0, g = 0, b = 0; // store RGB
-                        pixels = imageOutput.getRGB(i, j);  // Store channel color RGB 
-
                         // calculate a RGB by chip bit
-                        r += RGB.red(pixels) * kernel[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixels) * kernel[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixels) * kernel[k + kernelXY][l + kernelXY];
+                        
+                        r += RGB.red(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
+                    } //end k
+                }//end j
+                //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
+                int rgb = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+                //set RGB revert to image
+                imageOutput.setRGB(i, j, rgb);
+            }// end i
+        }  //end j
 
-                        //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
-                        int rgb = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-
-                        //set RGB revert to image
-                        imageOutput.setRGB(i, j, rgb);
-                        //} // end if
-                        //end j
-                    }
-                    //end k
-                }
-                //end j
-            }
-            // end i
-        }
         return imageOutput;
     }
 //----------------------------------end-----------------------------------------
