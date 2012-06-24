@@ -16,6 +16,7 @@ public class Image2D {
         BufferedImage image = ImageProcessor.load_image(url);
         image = ImageProcessor.gaussianFillter(image,5,5,0.86);
         image = ImageProcessor.grayscaleFillter(image);
+        image = ImageProcessor.threshold_Helper(image);
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
 

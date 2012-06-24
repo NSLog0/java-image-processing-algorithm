@@ -71,16 +71,14 @@ public class ImageProcessor {
 
         // kernel gaussian
         double gaussian[][] = new double[_wight][_height];
-        System.out.println("gaussing value: ");
         for (int j = 0; j < _height; j++) {
             for (int i = 0; i < _wight; i++) {
                 int xValue = i - (_wight / 2);
                 int yValue = j - (_height / 2);
                 gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
-                System.out.print(gaussian[i][j] + " ");
-                //   System.out.print(gaussian[i][j]);
+
             }
-            System.out.println(' ');
+
         }
 
         // get value _image and kernel
@@ -88,7 +86,6 @@ public class ImageProcessor {
         int heigth = _image.getHeight(); // image hight 
         int kernelSize = gaussian.length; // size kernel
         int kernelXY = kernelSize / 2; // find a center of kernel
-        System.out.println("kernel size / 2: " + kernelXY);
 
         // make a result with convolution method
         // return image result
@@ -114,10 +111,50 @@ public class ImageProcessor {
         }
         return imageOutput;
     }
-    //----------------------------------end Fillter--------------------------------------------
 
-    //----------------------------------- helper method------------------------------------
-    // use to copy image 
+    public static int otsuTreshold(BufferedImage _image) {
+        int _histogram[] = histogram(_image);
+        int total = _image.getWidth() * _image.getHeight();
+        float sum = 0;
+        for (int i = 0; i < 256; i++) {
+            sum += i * _histogram[i];
+        }
+        float sum_bg = 0.0f;
+        int wight_bg = 0, wight_fg = 0;
+
+        float varMax = 0.0f;
+        int threshold = 0;
+
+        for (int i = 0; i < 256; i++) {
+            wight_bg += _histogram[i];
+            if (wight_bg == 0) {
+                continue;
+            }
+            wight_fg = total - wight_bg;
+
+            if (wight_fg == 0) {
+                break;
+            }
+
+            sum_bg += (float) (i * _histogram[i]);
+            float mean_bg = sum_bg / wight_bg;
+            float mean_fg = (sum - sum_bg) / wight_fg;
+
+            float varBetween = (float) wight_bg * (float) wight_fg * (mean_bg - mean_fg) * (mean_bg - mean_fg);
+
+            if (varBetween > varMax) {
+                varMax = varBetween;
+                threshold = i;
+            }
+        }
+
+        return threshold;
+
+    }
+
+//----------------------------------end Fillter--------------------------------------------
+//----------------------------------- helper method------------------------------------
+// use to copy image 
     public static BufferedImage copyImg(BufferedImage bi) {
         ColorModel cm = bi.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -138,6 +175,48 @@ public class ImageProcessor {
         newPixel += blue;
 
         return newPixel;
+
+    }
+
+    public static int[] histogram(BufferedImage _image) {
+        int histo[] = new int[256];
+        for (int i = 0; i < histo.length; i++) {
+            histo[i] = 0;
+        }
+
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
+                int r = new Color(_image.getRGB(i, j)).getRed();
+                histo[r]++;
+            }
+        }
+
+
+        return histo;
+    }
+
+    public static BufferedImage threshold_Helper(BufferedImage _image) {
+        int r, p;
+        int threshold = otsuTreshold(_image);
+        BufferedImage imageOutput = copyImg(_image);
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
+
+                // Get pixels
+                r = new Color(_image.getRGB(i, j)).getRed();
+                int alpha = new Color(_image.getRGB(i, j)).getAlpha();
+                if (r > threshold) {
+                    p = 255;
+                } else {
+                    p = 0;
+                }
+                p = colorToRGB(alpha, p, p, p);
+                imageOutput.setRGB(i, j, p);
+
+            }
+        }
+
+        return imageOutput;
 
     }
 }
