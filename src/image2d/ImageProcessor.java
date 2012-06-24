@@ -81,13 +81,16 @@ public class ImageProcessor {
 
 //        // kernel gaussian
         double gaussian[][] = new double[_wight][_height];
+        System.out.println("gaussing value: ");
         for (int j = 0; j < _height; j++) {
             for (int i = 0; i < _wight; i++) {
                 int xValue = i - (_wight / 2);
                 int yValue = j - (_height / 2);
                 gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
+                System.out.print(gaussian[i][j]+" ");
                 //   System.out.print(gaussian[i][j]);
             }
+            System.out.println(' ');
         }
 
         // get value _image and kernel
@@ -95,7 +98,7 @@ public class ImageProcessor {
         int heigth = _image.getHeight(); // image hight 
         int kernelSize = gaussian.length; // size kernel
         int kernelXY = kernelSize / 2; // find a center of kernel
-        System.out.println(kernelXY);
+        System.out.println("kernel size / 2: " + kernelXY);
 
         // make a result with convolution method
         // return image result
