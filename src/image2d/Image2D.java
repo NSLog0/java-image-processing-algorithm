@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 public class Image2D {
 
     public Image2D() {
-        String url = "icon.jpg";
+        String url = "cat.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
         image = ImageProcessor.gaussianFillter(image,3,3,0.50);
         JFrame frame = new JFrame("Display Image");
@@ -21,8 +21,8 @@ public class Image2D {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add("Center", iPanel);
-        frame.setSize(65, 134);
-        //frame.setSize(image.getWidth(), image.getHeight());
+        //frame.setSize(65, 134);
+        frame.setSize(image.getWidth(), image.getHeight());
         frame.setLocation(480, 200);
         frame.setVisible(true);
 

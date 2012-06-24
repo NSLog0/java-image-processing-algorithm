@@ -5,6 +5,8 @@
 package image2d;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import javax.imageio.ImageIO;
 
@@ -33,33 +35,26 @@ public class ImageProcessor {
 
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
-        BufferedImage imageOutput = _images;     // Set initial BufferedImage
+        BufferedImage imageOutput = ImageProcessor.copyImg(_images);     // Set initial BufferedImage
+        int pixels; //use to store pixels
 
-        // Initial array Store image to array and size equal Image size
-        int pixel[][] = pixels.getPixels(imageOutput);
-
-        // calculate imageInput --------------------
-        for (int i = 0; i < wigth; ++i) {
-            for (int j = 0; j < height; ++j) {
-                // System.out.printf("%d,%d=\n", i, j);
-                //r = RGB.red(pixel, i, j);
-                //g = RGB.green(pixel, i, j);
-                //b = RGB.blue(pixel, i, j);
+        // calculate image
+        for (int i = 0; i < wigth; i++) {
+            for (int j = 0; j < height; j++) {
 
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-                        int r = 0, g = 0, b = 0;            // Store channel color RGB 
-//                        int xLocat = i + (k - kernelXY);
-//                        int yLocat = j + (l - kernelXY);
-//
-//                        if (xLocat >= 0 && xLocat < i && yLocat >= 0 && yLocat < j) {
+
+                        int r = 0, g = 0, b = 0; // store RGB
+                        pixels = imageOutput.getRGB(i, j);  // Store channel color RGB 
 
                         // calculate a RGB by chip bit
-                        r += RGB.red(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i, j) * kernel[k + kernelXY][l + kernelXY];
+                        r += RGB.red(pixels) * kernel[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixels) * kernel[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixels) * kernel[k + kernelXY][l + kernelXY];
+
                         //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
-                        int rgb = (r << 16) | (g << 8) | b;
+                        int rgb = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
 
                         //set RGB revert to image
                         imageOutput.setRGB(i, j, rgb);
@@ -79,7 +74,7 @@ public class ImageProcessor {
 
     public static BufferedImage gaussianFillter(BufferedImage _image, int _height, int _wight, double sigma) {
 
-//        // kernel gaussian
+        // kernel gaussian
         double gaussian[][] = new double[_wight][_height];
         System.out.println("gaussing value: ");
         for (int j = 0; j < _height; j++) {
@@ -104,5 +99,14 @@ public class ImageProcessor {
         // return image result
         return convolution(_image, gaussian, wight, heigth, kernelSize, kernelXY);
 
+    }
+
+    // use to copy image 
+    public static BufferedImage copyImg(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 }
