@@ -119,10 +119,10 @@ public class ImageProcessor {
         for (int i = 0; i < 256; i++) {
             sum += i * _histogram[i];
         }
-        float sum_bg = 0.0f;
+        float sum_bg = 0;
         int wight_bg = 0, wight_fg = 0;
 
-        float varMax = 0.0f;
+        float varMax = 0;
         int threshold = 0;
 
         for (int i = 0; i < 256; i++) {
@@ -176,7 +176,7 @@ public class ImageProcessor {
 
         return newPixel;
 
-    }
+   }
 
     public static int[] histogram(BufferedImage _image) {
         int histo[] = new int[256];
