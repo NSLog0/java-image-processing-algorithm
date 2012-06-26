@@ -14,10 +14,11 @@ public class Image2D {
     public Image2D() {
         String url = "cat.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
-        image = ImageProcessor.gaussianFillter(image,5,5,0.86);
+        image = ImageProcessor.gaussianFillter(image, 5, 5, 0.50);
         image = ImageProcessor.grayscaleFillter(image);
-        image = ImageProcessor.threshold_Helper(image);
-        JFrame frame = new JFrame("Display Image");
+        image = ImageProcessor.histogram_cal(image);
+        image = ImageProcessor.threshold(image);
+        JFrame frame = new JFrame("Grayscale");
         ImagePanel iPanel = new ImagePanel(image);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

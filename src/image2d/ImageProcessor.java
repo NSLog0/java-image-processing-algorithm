@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -37,7 +38,7 @@ public class ImageProcessor {
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = copyImg(_images);     // Set initial BufferedImage
-        int pixel[][] = pixels.getPixels(_images); //use to store pixels
+        int pixel[][] = Get_Pixels.getPixels(_images); //use to store pixels
 
         // calculate image
         for (int i = 0 + kernelXY; i < wigth - kernelXY - 1; i++) {
@@ -96,7 +97,7 @@ public class ImageProcessor {
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
         BufferedImage imageOutput = ImageProcessor.copyImg(_image);
         int newPixel;
-        int p[][] = pixels.getPixels(_image);
+        int p[][] = Get_Pixels.getPixels(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int a, r, g, b;
@@ -112,92 +113,130 @@ public class ImageProcessor {
         return imageOutput;
     }
 
-    public static int otsuTreshold(BufferedImage _image) {
-        int _histogram[] = histogram(_image);
-        int total = _image.getWidth() * _image.getHeight();
-        float sum = 0;
-        for (int i = 0; i < 256; i++) {
-            sum += i * _histogram[i];
-        }
-        float sum_bg = 0;
-        int wight_bg = 0, wight_fg = 0;
+    public static BufferedImage histogram_cal(BufferedImage _image) {
+        int a, r, g, b, p = 0;
+        BufferedImage imageOutput = copyImg(_image);
 
-        float varMax = 0;
-        int threshold = 0;
+        ArrayList<int[]> histogramEQ = histogram(_image);
+        
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
 
-        for (int i = 0; i < 256; i++) {
-            wight_bg += _histogram[i];
-            if (wight_bg == 0) {
-                continue;
-            }
-            wight_fg = total - wight_bg;
+                // Get pixels by R, G, B
+                a = new Color(_image.getRGB(i, j)).getAlpha();
+                r = new Color(_image.getRGB(i, j)).getRed();
+                g = new Color(_image.getRGB(i, j)).getGreen();
+                b = new Color(_image.getRGB(i, j)).getBlue();
 
-            if (wight_fg == 0) {
-                break;
-            }
+                // Set new pixel values using the histogram lookup table
+                r = histogramEQ.get(0)[r];
+                g = histogramEQ.get(1)[g];
+                b = histogramEQ.get(2)[b];
 
-            sum_bg += (float) (i * _histogram[i]);
-            float mean_bg = sum_bg / wight_bg;
-            float mean_fg = (sum - sum_bg) / wight_fg;
+                // Return back to original format
+                p = colorToRGB(a, r, g, b);
 
-            float varBetween = (float) wight_bg * (float) wight_fg * (mean_bg - mean_fg) * (mean_bg - mean_fg);
+                // Write pixels into image
+                imageOutput.setRGB(i, j, p);
 
-            if (varBetween > varMax) {
-                varMax = varBetween;
-                threshold = i;
             }
         }
 
-        return threshold;
 
+        return imageOutput;
     }
 
-//----------------------------------end Fillter--------------------------------------------
-//----------------------------------- helper method------------------------------------
-// use to copy image 
-    public static BufferedImage copyImg(BufferedImage bi) {
-        ColorModel cm = bi.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+    public static ArrayList<int[]> histogram(BufferedImage _image) {
+        
+        int histogramR[] = new int[256];
+        int histogramG[] = new int[256];
+        int histogramB[] = new int[256];
+        ArrayList<int[]> _histogram = imageHistogram(_image);
+        ArrayList<int[]> imageHis = new ArrayList<int[]>();
+        int sumr = 0;
+        int sumg = 0;
+        int sumb = 0;
 
-        WritableRaster raster = bi.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+        for (int i = 0; i < histogramR.length; i++) {
+            histogramR[i] = 0;
+            histogramG[i] = 0;
+            histogramB[i] = 0;
+        }
+
+        float scale_factor = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
+
+        for (int i = 0; i < histogramR.length; i++) {
+            sumr += _histogram.get(0)[i];
+            int valr = (int) (sumr * scale_factor);
+            if (valr > 255) {
+                histogramR[i] = 255;
+            } else {
+                histogramR[i] = valr;
+            }
+
+            sumg += _histogram.get(1)[i];
+            int valg = (int) (sumg * scale_factor);
+            if (valg > 255) {
+                histogramG[i] = 255;
+            } else {
+                histogramG[i] = valg;
+            }
+
+            sumb += _histogram.get(2)[i];
+            int valb = (int) (sumb * scale_factor);
+            if (valb > 255) {
+                histogramB[i] = 255;
+            } else {
+                histogramB[i] = valb;
+            }
+        }
+
+        imageHis.add(histogramR);
+        imageHis.add(histogramG);
+        imageHis.add(histogramB);
+
+        return imageHis;
     }
 
-    private static int colorToRGB(int alpha, int red, int green, int blue) {
+    
+    
+    public static ArrayList<int[]> imageHistogram(BufferedImage _image) {
+        ArrayList<int[]> _histogram = new ArrayList();
+        int histogramR[] = new int[256];
+        int histogramG[] = new int[256];
+        int histogramB[] = new int[256];
 
-        int newPixel = 0;
-        newPixel += alpha;
-        newPixel = newPixel << 8;
-        newPixel += red;
-        newPixel = newPixel << 8;
-        newPixel += green;
-        newPixel = newPixel << 8;
-        newPixel += blue;
+        for (int i = 0; i < histogramR.length; i++) {
+            histogramR[i] = 0;
+            histogramG[i] = 0;
+            histogramB[i] = 0;
 
-        return newPixel;
-
-   }
-
-    public static int[] histogram(BufferedImage _image) {
-        int histo[] = new int[256];
-        for (int i = 0; i < histo.length; i++) {
-            histo[i] = 0;
         }
 
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int r = new Color(_image.getRGB(i, j)).getRed();
-                histo[r]++;
+                int g = new Color(_image.getRGB(i, j)).getGreen();
+                int b = new Color(_image.getRGB(i, j)).getBlue();
+
+                histogramR[r]++;
+                histogramG[g]++;
+                histogramB[b]++;
+
             }
         }
 
+        _histogram.add(histogramR);
+        _histogram.add(histogramG);
+        _histogram.add(histogramB);
 
-        return histo;
+        return _histogram;
     }
-
-    public static BufferedImage threshold_Helper(BufferedImage _image) {
+    
+    // --------------------------------not ok!!! ------------------------------
+    public static BufferedImage threshold(BufferedImage _image) {
         int r, p;
-        int threshold = otsuTreshold(_image);
+        int threshold = 130;//otsuTreshold(_image);
         BufferedImage imageOutput = copyImg(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -217,6 +256,81 @@ public class ImageProcessor {
         }
 
         return imageOutput;
+
+    }
+// --------------------------------not ok!!! ------------------------------
+
+//    public static int otsuTreshold(BufferedImage _image) {
+//        ArrayList<int[]> _histogram = histogram(_image);
+//        ???     
+//         
+//        
+//        
+//        
+////        int total = _image.getWidth() * _image.getHeight();
+////        float sum = 0;
+////        for (int i = 0; i < 256; i++) {
+////            sum += i * _histogram[i];
+////        }
+////        float sum_bg = 0;
+////        int wight_bg = 0, wight_fg = 0;
+////
+////        float varMax = 0;
+////        int threshold = 0;
+////
+////        for (int i = 0; i < 256; i++) {
+////            wight_bg += _histogram[i];
+////            if (wight_bg == 0) {
+////                continue;
+////            }
+////            wight_fg = total - wight_bg;
+////
+////            if (wight_fg == 0) {
+////                break;
+////            }
+////
+////            sum_bg += (float) (i * _histogram[i]);
+////            float mean_bg = sum_bg / wight_bg;
+////            float mean_fg = (sum - sum_bg) / wight_fg;
+////
+////            float varBetween = (float) wight_bg * (float) wight_fg * (mean_bg - mean_fg) * (mean_bg - mean_fg);
+////
+////            if (varBetween > varMax) {
+////                varMax = varBetween;
+////                threshold = i;
+////            }
+////        }
+////
+////        return threshold;
+//
+//    }
+//----------------------------------end Fillter--------------------------------------------
+    
+    
+    
+    
+//----------------------------------- helper method------------------------------------
+// use to copy image 
+    public static BufferedImage copyImg(BufferedImage _image) {
+        ColorModel cm = _image.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = _image.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+    }
+
+    private static int colorToRGB(int alpha, int red, int green, int blue) {
+
+        int newPixel = 0;
+        newPixel += alpha;
+        newPixel = newPixel << 8;
+        newPixel += red;
+        newPixel = newPixel << 8;
+        newPixel += green;
+        newPixel = newPixel << 8;
+        newPixel += blue;
+
+        return newPixel;
 
     }
 }
