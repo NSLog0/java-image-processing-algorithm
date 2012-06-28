@@ -17,7 +17,7 @@ public class Image2D {
         image = ImageProcessor.gaussianFillter(image, 5, 5, 0.50);
         image = ImageProcessor.grayscaleFillter(image);
         image = ImageProcessor.histogram_cal(image);
-        //image = ImageProcessor.threshold(image); // is method not work While the system is improved.
+        image = ImageProcessor.threshold(image);
         JFrame frame = new JFrame("Grayscale");
         ImagePanel iPanel = new ImagePanel(image);
 

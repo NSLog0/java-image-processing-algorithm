@@ -118,7 +118,7 @@ public class ImageProcessor {
         BufferedImage imageOutput = copyImg(_image);
 
         ArrayList<int[]> histogramEQ = histogram(_image);
-
+        
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
 
@@ -146,19 +146,13 @@ public class ImageProcessor {
         return imageOutput;
     }
 
-    // Get the histogram equalization lookup table for separate R, G, B channels
     public static ArrayList<int[]> histogram(BufferedImage _image) {
-
-        // Fill the lookup table
+        
         int histogramR[] = new int[256];
         int histogramG[] = new int[256];
         int histogramB[] = new int[256];
-        // Get an image histogram - calculated values by R, G, B channels
         ArrayList<int[]> _histogram = imageHistogram(_image);
-
-        // Create the lookup table
         ArrayList<int[]> imageHis = new ArrayList<int[]>();
-
         int sumr = 0;
         int sumg = 0;
         int sumb = 0;
@@ -169,9 +163,6 @@ public class ImageProcessor {
             histogramB[i] = 0;
         }
 
-
-
-        // Calculate the scale factor
         float scale_factor = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
 
         for (int i = 0; i < histogramR.length; i++) {
@@ -207,11 +198,10 @@ public class ImageProcessor {
         return imageHis;
     }
 
+    
+    
     public static ArrayList<int[]> imageHistogram(BufferedImage _image) {
-        // Create the lookup table
         ArrayList<int[]> _histogram = new ArrayList();
-
-        // Fill the lookup table
         int histogramR[] = new int[256];
         int histogramG[] = new int[256];
         int histogramB[] = new int[256];
@@ -229,7 +219,6 @@ public class ImageProcessor {
                 int g = new Color(_image.getRGB(i, j)).getGreen();
                 int b = new Color(_image.getRGB(i, j)).getBlue();
 
-                // Increase the values of colors
                 histogramR[r]++;
                 histogramG[g]++;
                 histogramB[b]++;
@@ -243,10 +232,7 @@ public class ImageProcessor {
 
         return _histogram;
     }
-
     
-    
-    ///////////////////////////////////////////////////////////////////////////////
     // --------------------------------not ok!!! ------------------------------
     public static BufferedImage threshold(BufferedImage _image) {
         int r, p;
@@ -318,12 +304,12 @@ public class ImageProcessor {
 ////        return threshold;
 //
 //    }
-/////////////////////////////////////////////////////////////////////////////////
-//----------------------------------end Fillter-------------------------------------
+//----------------------------------end Fillter--------------------------------------------
     
     
     
-//----------------------------------- helper method---------------------------------
+    
+//----------------------------------- helper method------------------------------------
 // use to copy image 
     public static BufferedImage copyImg(BufferedImage _image) {
         ColorModel cm = _image.getColorModel();
@@ -333,10 +319,7 @@ public class ImageProcessor {
 
     }
 
-    
-    
-    // Convert R, G, B, Alpha to standard 8 bit
-    public static int colorToRGB(int alpha, int red, int green, int blue) {
+    private static int colorToRGB(int alpha, int red, int green, int blue) {
 
         int newPixel = 0;
         newPixel += alpha;
