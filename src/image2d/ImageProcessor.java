@@ -244,8 +244,6 @@ public class ImageProcessor {
         return _histogram;
     }
 
-    
-    
     ///////////////////////////////////////////////////////////////////////////////
     // --------------------------------not ok!!! ------------------------------
     public static BufferedImage threshold(BufferedImage _image) {
@@ -320,9 +318,6 @@ public class ImageProcessor {
 //    }
 /////////////////////////////////////////////////////////////////////////////////
 //----------------------------------end Fillter-------------------------------------
-    
-    
-    
 //----------------------------------- helper method---------------------------------
 // use to copy image 
     public static BufferedImage copyImg(BufferedImage _image) {
@@ -333,8 +328,6 @@ public class ImageProcessor {
 
     }
 
-    
-    
     // Convert R, G, B, Alpha to standard 8 bit
     public static int colorToRGB(int alpha, int red, int green, int blue) {
 
@@ -348,6 +341,21 @@ public class ImageProcessor {
         newPixel += blue;
 
         return newPixel;
+
+    }
+
+    public static void printColor(BufferedImage _image) {
+        BufferedImage output = copyImg(_image);
+        int[][] p = Get_Pixels.getPixels(_image);
+
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
+
+                System.out.print(p[i][j] + " ");
+            }
+            System.out.println("");
+        }
+
 
     }
 }
