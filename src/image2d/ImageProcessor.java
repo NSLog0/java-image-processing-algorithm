@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -96,7 +95,7 @@ public class ImageProcessor {
 
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
         BufferedImage imageOutput = ImageProcessor.copyImg(_image);
-        int newPixel;
+        int newPixel, grays;
         int p[][] = Get_Pixels.getPixels(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -105,150 +104,37 @@ public class ImageProcessor {
                 r = RGB.red(p, i, j);
                 g = RGB.green(p, i, j);
                 b = RGB.blue(p, i, j);
-                r = (int) (0.21 * r + 0.71 * g + 0.07 * b);
-                newPixel = colorToRGB(a, r, r, r);
+                grays = (int) (0.21 * r + 0.71 * g + 0.07 * b);
+                a = (a << 24);
+                r = (grays << 16);
+                g = (grays << 8);
+                b = (grays);
+                newPixel = a + r + g + b;
                 imageOutput.setRGB(i, j, newPixel);
             }
         }
         return imageOutput;
     }
 
-    public static BufferedImage histogram_cal(BufferedImage _image) {
-        int a, r, g, b, p = 0;
-        BufferedImage imageOutput = copyImg(_image);
-
-        ArrayList<int[]> histogramEQ = histogram(_image);
-
+    public static int[] histogtam(BufferedImage _image) {
+        BufferedImage output = copyImg(_image);
+        int pixels[][] = Get_Pixels.getPixels(_image);
+        int interval[] = new int[256];
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
-
-                // Get pixels by R, G, B
-                a = new Color(_image.getRGB(i, j)).getAlpha();
-                r = new Color(_image.getRGB(i, j)).getRed();
-                g = new Color(_image.getRGB(i, j)).getGreen();
-                b = new Color(_image.getRGB(i, j)).getBlue();
-
-                // Set new pixel values using the histogram lookup table
-                r = histogramEQ.get(0)[r];
-                g = histogramEQ.get(1)[g];
-                b = histogramEQ.get(2)[b];
-
-                // Return back to original format
-                p = colorToRGB(a, r, g, b);
-
-                // Write pixels into image
-                imageOutput.setRGB(i, j, p);
-
+                int r = (pixels[i][j] >> 16) & 0xff;
+                interval[r]++;
             }
+
         }
 
+        return interval;
 
-        return imageOutput;
     }
 
-    // Get the histogram equalization lookup table for separate R, G, B channels
-    public static ArrayList<int[]> histogram(BufferedImage _image) {
-
-        // Fill the lookup table
-        int histogramR[] = new int[256];
-        int histogramG[] = new int[256];
-        int histogramB[] = new int[256];
-        // Get an image histogram - calculated values by R, G, B channels
-        ArrayList<int[]> _histogram = imageHistogram(_image);
-
-        // Create the lookup table
-        ArrayList<int[]> imageHis = new ArrayList<int[]>();
-
-        int sumr = 0;
-        int sumg = 0;
-        int sumb = 0;
-
-        for (int i = 0; i < histogramR.length; i++) {
-            histogramR[i] = 0;
-            histogramG[i] = 0;
-            histogramB[i] = 0;
-        }
-
-
-
-        // Calculate the scale factor
-        float scale_factor = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
-
-        for (int i = 0; i < histogramR.length; i++) {
-            sumr += _histogram.get(0)[i];
-            int valr = (int) (sumr * scale_factor);
-            if (valr > 255) {
-                histogramR[i] = 255;
-            } else {
-                histogramR[i] = valr;
-            }
-
-            sumg += _histogram.get(1)[i];
-            int valg = (int) (sumg * scale_factor);
-            if (valg > 255) {
-                histogramG[i] = 255;
-            } else {
-                histogramG[i] = valg;
-            }
-
-            sumb += _histogram.get(2)[i];
-            int valb = (int) (sumb * scale_factor);
-            if (valb > 255) {
-                histogramB[i] = 255;
-            } else {
-                histogramB[i] = valb;
-            }
-        }
-
-        imageHis.add(histogramR);
-        imageHis.add(histogramG);
-        imageHis.add(histogramB);
-
-        return imageHis;
-    }
-
-    public static ArrayList<int[]> imageHistogram(BufferedImage _image) {
-        // Create the lookup table
-        ArrayList<int[]> _histogram = new ArrayList();
-
-        // Fill the lookup table
-        int histogramR[] = new int[256];
-        int histogramG[] = new int[256];
-        int histogramB[] = new int[256];
-
-        for (int i = 0; i < histogramR.length; i++) {
-            histogramR[i] = 0;
-            histogramG[i] = 0;
-            histogramB[i] = 0;
-
-        }
-
-        for (int i = 0; i < _image.getWidth(); i++) {
-            for (int j = 0; j < _image.getHeight(); j++) {
-                int r = new Color(_image.getRGB(i, j)).getRed();
-                int g = new Color(_image.getRGB(i, j)).getGreen();
-                int b = new Color(_image.getRGB(i, j)).getBlue();
-
-                // Increase the values of colors
-                histogramR[r]++;
-                histogramG[g]++;
-                histogramB[b]++;
-
-            }
-        }
-
-        _histogram.add(histogramR);
-        _histogram.add(histogramG);
-        _histogram.add(histogramB);
-
-        return _histogram;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // --------------------------------not ok!!! ------------------------------
     public static BufferedImage threshold(BufferedImage _image) {
-        int r, p;
-        int threshold = 130;//otsuTreshold(_image);
+        int _r, p, r, g, b;
+        int threshold = otsuTreshold(_image);
         BufferedImage imageOutput = copyImg(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -261,7 +147,12 @@ public class ImageProcessor {
                 } else {
                     p = 0;
                 }
-                p = colorToRGB(alpha, p, p, p);
+                alpha = (alpha << 24);
+                r = (p << 16);
+                g = (p << 8);
+                b = (p);
+
+                p = alpha + r + g + b;
                 imageOutput.setRGB(i, j, p);
 
             }
@@ -272,51 +163,44 @@ public class ImageProcessor {
     }
 // --------------------------------not ok!!! ------------------------------
 
-//    public static int otsuTreshold(BufferedImage _image) {
-//        ArrayList<int[]> _histogram = histogram(_image);
-//        ???     
-//         
-//        
-//        
-//        
-////        int total = _image.getWidth() * _image.getHeight();
-////        float sum = 0;
-////        for (int i = 0; i < 256; i++) {
-////            sum += i * _histogram[i];
-////        }
-////        float sum_bg = 0;
-////        int wight_bg = 0, wight_fg = 0;
-////
-////        float varMax = 0;
-////        int threshold = 0;
-////
-////        for (int i = 0; i < 256; i++) {
-////            wight_bg += _histogram[i];
-////            if (wight_bg == 0) {
-////                continue;
-////            }
-////            wight_fg = total - wight_bg;
-////
-////            if (wight_fg == 0) {
-////                break;
-////            }
-////
-////            sum_bg += (float) (i * _histogram[i]);
-////            float mean_bg = sum_bg / wight_bg;
-////            float mean_fg = (sum - sum_bg) / wight_fg;
-////
-////            float varBetween = (float) wight_bg * (float) wight_fg * (mean_bg - mean_fg) * (mean_bg - mean_fg);
-////
-////            if (varBetween > varMax) {
-////                varMax = varBetween;
-////                threshold = i;
-////            }
-////        }
-////
-////        return threshold;
-//
-//    }
-/////////////////////////////////////////////////////////////////////////////////
+    public static int otsuTreshold(BufferedImage _image) {
+        int _histogram[] = histogtam(_image);
+
+        int total = _image.getWidth() * _image.getHeight();
+        float sum = 0;
+        for (int i = 0; i < 256; i++) {
+            sum += i * _histogram[i];
+        }
+        float sum_bg = 0;
+        int wight_bg = 0, wight_fg = 0;
+
+        float varMax = 0;
+        int threshold = 0;
+
+        for (int i = 0; i < 256; i++) {
+            wight_bg += _histogram[i];
+            if (wight_bg == 0) {
+                continue;
+            }
+            wight_fg = total - wight_bg;
+
+            if (wight_fg == 0) {
+                break;
+            }
+
+            sum_bg += (float) (i * _histogram[i]);
+            float mean_bg = sum_bg / wight_bg;
+            float mean_fg = (sum - sum_bg) / wight_fg;
+            float varBetween = (float) wight_bg * (float) wight_fg * (mean_bg - mean_fg) * (mean_bg - mean_fg);
+            if (varBetween > varMax) {
+                varMax = varBetween;
+                threshold = i;
+            }
+        }
+        System.out.println(threshold);
+        return threshold;
+    }
+
 //----------------------------------end Fillter-------------------------------------
 //----------------------------------- helper method---------------------------------
 // use to copy image 
@@ -325,37 +209,6 @@ public class ImageProcessor {
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = _image.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-
-    }
-
-    // Convert R, G, B, Alpha to standard 8 bit
-    public static int colorToRGB(int alpha, int red, int green, int blue) {
-
-        int newPixel = 0;
-        newPixel += alpha;
-        newPixel = newPixel << 8;
-        newPixel += red;
-        newPixel = newPixel << 8;
-        newPixel += green;
-        newPixel = newPixel << 8;
-        newPixel += blue;
-
-        return newPixel;
-
-    }
-
-    public static void printColor(BufferedImage _image) {
-        BufferedImage output = copyImg(_image);
-        int[][] p = Get_Pixels.getPixels(_image);
-
-        for (int i = 0; i < _image.getWidth(); i++) {
-            for (int j = 0; j < _image.getHeight(); j++) {
-
-                System.out.print(p[i][j] + " ");
-            }
-            System.out.println("");
-        }
-
 
     }
 }

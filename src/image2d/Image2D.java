@@ -12,21 +12,19 @@ import javax.swing.JFrame;
 public class Image2D {
 
     public Image2D() {
-        String url = "icon.jpg";
+        String url = "milk.jpg";
         BufferedImage image = ImageProcessor.load_image(url);
-        image = ImageProcessor.gaussianFillter(image, 5, 5, 0.86);
+        image = ImageProcessor.gaussianFillter(image, 5, 5, 0.95);
         image = ImageProcessor.grayscaleFillter(image);
-       // image = ImageProcessor.histogram_cal(image);
-        //image = ImageProcessor.threshold(image); // is method not work While the system is improved.
-        Interval.counter(image);
-        //ImageProcessor.printColor(image);
+        image = ImageProcessor.threshold(image); // is method not work While the system is improved.
+        
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add("Center", iPanel);
-        frame.setSize(65, 134);
-        //frame.setSize(image.getWidth(), image.getHeight());
+        //frame.setSize(65, 134);
+        frame.setSize(image.getWidth(), image.getHeight());
         frame.setLocation(480, 200);
         frame.setVisible(true);
 
