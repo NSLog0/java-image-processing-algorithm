@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage;
  *
  * @author pratchaya
  */
-public class Get_Pixels{
+public class GetPixels{
 
     //  static int w, h;
     // use for store pixel image  to array 
-    public static int[][] getPixels(BufferedImage image) {
+    public static int[][] getPixel(BufferedImage image) {
         int pixel[][] = new int[image.getWidth()][image.getHeight()];
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {

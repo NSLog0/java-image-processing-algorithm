@@ -10,6 +10,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,10 +25,15 @@ public class ImageProcessor {
         try {
             // read file form BufferedImage
             image = ImageIO.read(new File(url));
+            if(!image.equals(null)){
+                System.out.println("Load data at URL:"+url+" done.");
+                            
+            }
 
         } catch (Exception e) {
-            // print when error
-            System.out.println(e.getMessage());
+           
+            JOptionPane.showMessageDialog(null, e.getMessage()+" File does not exist because name or extension file is not correct."
+                    + "\nPlease check your file again.");
         }
         // return result image when read url done!
         return image;
@@ -37,7 +43,7 @@ public class ImageProcessor {
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = copyImg(_images);     // Set initial BufferedImage
-        int pixel[][] = Get_Pixels.getPixels(_images); //use to store pixels
+        int pixel[][] = GetPixels.getPixel(_images); //use to store pixels
 
         // calculate image
         for (int i = 0 + kernelXY; i < wigth - kernelXY - 1; i++) {
@@ -90,13 +96,13 @@ public class ImageProcessor {
         // make a result with convolution method
         // return image result
         return convolution(_image, gaussian, wight, heigth, kernelSize, kernelXY);
-
+      
     }
 
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
         BufferedImage imageOutput = ImageProcessor.copyImg(_image);
-        int newPixel, grays;
-        int p[][] = Get_Pixels.getPixels(_image);
+        int grays;
+        int p[][] = GetPixels.getPixel(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int a, r, g, b;
@@ -104,13 +110,13 @@ public class ImageProcessor {
                 r = RGB.red(p, i, j);
                 g = RGB.green(p, i, j);
                 b = RGB.blue(p, i, j);
-                grays = (int) (0.21 * r + 0.71 * g + 0.07 * b);
+                grays = (int) (0.2125 * r + 0.7154 * g + 0.0721 * b);
                 a = (a << 24);
                 r = (grays << 16);
                 g = (grays << 8);
                 b = (grays);
-                newPixel = a + r + g + b;
-                imageOutput.setRGB(i, j, newPixel);
+                grays = a + r + g + b;
+                imageOutput.setRGB(i, j, grays);
             }
         }
         return imageOutput;
@@ -118,7 +124,7 @@ public class ImageProcessor {
 
     public static int[] histogtam(BufferedImage _image) {
         BufferedImage output = copyImg(_image);
-        int pixels[][] = Get_Pixels.getPixels(_image);
+        int pixels[][] = GetPixels.getPixel(_image);
         int interval[] = new int[256];
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -129,6 +135,58 @@ public class ImageProcessor {
         }
 
         return interval;
+
+    }
+
+    public static int[] balancing(BufferedImage _image) {
+        int _histogram[] = histogtam(_image);
+        int _factor[] = new int[256];
+        for (int i = 0; i < _factor.length; i++) {
+            _factor[i] = 0;
+        }
+        long sum = 0;
+        float scale = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
+
+        for (int i = 0; i < _factor.length; i++) {
+            sum += _histogram[i];
+            int value = (int) (sum * scale);
+            if (value > 255) {
+                _factor[i] = 255;
+            } else {
+                _factor[i] = value;
+            }
+        }
+        return _factor;
+
+    }
+
+    public static BufferedImage balancingImg(BufferedImage _image) {
+        int new_Histogram[] = balancing(_image);
+        BufferedImage output = copyImg(_image);
+        int pixel[][] = GetPixels.getPixel(output);
+        int r, g, b, p;
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
+                r = RGB.red(pixel, i, j);
+                g = RGB.green(pixel, i, j);
+                b = RGB.blue(pixel, i, j);
+
+                r = new_Histogram[r];
+                g = new_Histogram[g];
+                b = new_Histogram[b];
+
+                r = (r << 16);
+                g = (g << 8);
+                b = (b);
+
+                p = r + g + b;
+
+                output.setRGB(i, j, p);
+            }
+
+        }
+
+        return output;
 
     }
 
@@ -197,7 +255,7 @@ public class ImageProcessor {
                 threshold = i;
             }
         }
-        System.out.println(threshold);
+       
         return threshold;
     }
 
