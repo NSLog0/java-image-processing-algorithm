@@ -25,14 +25,14 @@ public class ImageProcessor {
         try {
             // read file form BufferedImage
             image = ImageIO.read(new File(url));
-            if(!image.equals(null)){
-                System.out.println("Load data at URL:"+url+" done.");
-                            
+            if (!image.equals(null)) {
+                System.out.println("Load data at URL:" + url + " done.");
+
             }
 
         } catch (Exception e) {
-           
-            JOptionPane.showMessageDialog(null, e.getMessage()+" File does not exist because name or extension file is not correct."
+
+            JOptionPane.showMessageDialog(null, e.getMessage() + " File does not exist because name or extension file is not correct."
                     + "\nPlease check your file again.");
         }
         // return result image when read url done!
@@ -96,7 +96,7 @@ public class ImageProcessor {
         // make a result with convolution method
         // return image result
         return convolution(_image, gaussian, wight, heigth, kernelSize, kernelXY);
-      
+
     }
 
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
@@ -110,12 +110,15 @@ public class ImageProcessor {
                 r = RGB.red(p, i, j);
                 g = RGB.green(p, i, j);
                 b = RGB.blue(p, i, j);
-                grays = (int) (0.2125 * r + 0.7154 * g + 0.0721 * b);
+
+                grays = (int) (0.2125 * r + 0.7154 * g + 0.0721 * b); //formula
+
                 a = (a << 24);
                 r = (grays << 16);
                 g = (grays << 8);
                 b = (grays);
-                grays = a + r + g + b;
+
+                grays = a + r + g + b; //sum RGB
                 imageOutput.setRGB(i, j, grays);
             }
         }
@@ -123,7 +126,6 @@ public class ImageProcessor {
     }
 
     public static int[] histogtam(BufferedImage _image) {
-        BufferedImage output = copyImg(_image);
         int pixels[][] = GetPixels.getPixel(_image);
         int interval[] = new int[256];
         for (int i = 0; i < _image.getWidth(); i++) {
@@ -255,7 +257,7 @@ public class ImageProcessor {
                 threshold = i;
             }
         }
-       
+        System.out.println(threshold);
         return threshold;
     }
 
