@@ -41,9 +41,9 @@ public class ImageProcessor {
     //---------------------------------end--------------------------------------
 
     // -----------------------------Convolution --------------------------------
-    public static BufferedImage convolution(BufferedImage _images, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
-        BufferedImage imageOutput = copyImg(_images);     // Set initial BufferedImage
-        int pixel[][] = GetPixels.getPixel(_images); //use to store pixels
+    public static BufferedImage convolution(BufferedImage _image, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
+        BufferedImage imageOutput = Unitys.copyImg(_image);     // Set initial BufferedImage
+        int pixel[][] = GetPixels.getPixel(_image); //use to store pixels
 
         // calculate image
         for (int i = 0 + kernelXY; i < wigth - kernelXY - 1; i++) {
@@ -54,15 +54,15 @@ public class ImageProcessor {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
 
                         // calculate a RGB by chip bit
-                        a += RGB.alpha(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
-                        r += RGB.red(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i - (k), j - (l)) * kernel[k + kernelXY][l + kernelXY];
+                        a += RGB.alpha(pixel, i - k, j - l) * kernel[k + kernelXY][l + kernelXY];
+                        r += RGB.red(pixel, i - k, j - l) * kernel[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixel, i - k, j - l) * kernel[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixel, i - k, j - l) * kernel[k + kernelXY][l + kernelXY];
 
                     } //end k
                 }//end j
                 //System.out.println(i + "," + j + ": " + "RED: " + r + " GREEN: " + g + " BLUE: " + b + "\n");
-                int rgb = ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+                int rgb = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
                 //set RGB revert to image
                 imageOutput.setRGB(i, j, rgb);
             }// end i
@@ -100,7 +100,7 @@ public class ImageProcessor {
     }
 
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
-        BufferedImage imageOutput = ImageProcessor.copyImg(_image);
+        BufferedImage imageOutput = Unitys.copyImg(_image);
         int grays;
         int p[][] = GetPixels.getPixel(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
@@ -164,7 +164,7 @@ public class ImageProcessor {
 
     public static BufferedImage balancingImg(BufferedImage _image) {
         int new_Histogram[] = balancing(_image);
-        BufferedImage output = copyImg(_image);
+        BufferedImage output = Unitys.copyImg(_image);
         int pixel[][] = GetPixels.getPixel(output);
         int r, g, b, p;
         for (int i = 0; i < _image.getWidth(); i++) {
@@ -194,8 +194,9 @@ public class ImageProcessor {
 
     public static BufferedImage threshold(BufferedImage _image) {
         int _r, p, r, g, b;
-        int threshold = otsuTreshold(_image);
-        BufferedImage imageOutput = copyImg(_image);
+
+        double threshold = otsuTreshold(_image);
+        BufferedImage imageOutput = Unitys.copyImg(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
 
@@ -261,14 +262,27 @@ public class ImageProcessor {
         return threshold;
     }
 
-//----------------------------------end Fillter-------------------------------------
-//----------------------------------- helper method---------------------------------
-// use to copy image 
-    public static BufferedImage copyImg(BufferedImage _image) {
-        ColorModel cm = _image.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = _image.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    public static BufferedImage gaussianFilters(BufferedImage img) {
+        int cuttoff = 2000;
+        double magic = 1.442695;
+        int xcenter = img.getWidth() / 2 - 1;
+        int ycenter = img.getHeight() / 2 - 1;
+
+        BufferedImage dest = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                int px = img.getRGB(x, y);
+
+                double distance = Math.sqrt(x * x + y * y);
+                double value = px * 255 * Math.exp((-1 * distance * distance) / (magic * cuttoff * cuttoff));
+                dest.setRGB(x, y, (int) value);
+
+            }
+        }
+
+        return dest;
 
     }
+    //----------------------------------end Fillter-------------------------------------
 }
