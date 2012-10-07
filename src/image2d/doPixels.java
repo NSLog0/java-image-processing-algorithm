@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
  *
  * @author pratchaya
  */
-public class GetPixels{
+public class doPixels{
 
     //  static int w, h;
     // use for store pixel image  to array 

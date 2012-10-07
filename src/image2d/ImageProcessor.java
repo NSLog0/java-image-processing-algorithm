@@ -43,7 +43,7 @@ public class ImageProcessor {
     // -----------------------------Convolution --------------------------------
     public static BufferedImage convolution(BufferedImage _image, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = Unitys.copyImg(_image);     // Set initial BufferedImage
-        int pixel[][] = GetPixels.getPixel(_image); //use to store pixels
+        int pixel[][] = doPixels.getPixel(_image); //use to store pixels
 
         // calculate image
         for (int i = 0 + kernelXY; i < wigth - kernelXY - 1; i++) {
@@ -75,16 +75,14 @@ public class ImageProcessor {
 
     public static BufferedImage gaussianFillter(BufferedImage _image, int _height, int _wight, double sigma) {
 
-        // kernel gaussian
+        // rander kernel gaussian
         double gaussian[][] = new double[_wight][_height];
         for (int j = 0; j < _height; j++) {
             for (int i = 0; i < _wight; i++) {
                 int xValue = i - (_wight / 2);
                 int yValue = j - (_height / 2);
                 gaussian[i][j] = (1 / (2 * Math.PI * Math.pow(sigma, 2))) * (Math.pow(Math.E, -((Math.pow(xValue, 2) + Math.pow(yValue, 2)) / (2 * Math.pow(sigma, 2)))));
-
             }
-
         }
 
         // get value _image and kernel
@@ -102,7 +100,7 @@ public class ImageProcessor {
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
         BufferedImage imageOutput = Unitys.copyImg(_image);
         int grays;
-        int p[][] = GetPixels.getPixel(_image);
+        int p[][] = doPixels.getPixel(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int a, r, g, b;
@@ -126,7 +124,7 @@ public class ImageProcessor {
     }
 
     public static int[] histogtam(BufferedImage _image) {
-        int pixels[][] = GetPixels.getPixel(_image);
+        int pixels[][] = doPixels.getPixel(_image);
         int interval[] = new int[256];
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -143,9 +141,7 @@ public class ImageProcessor {
     public static int[] balancing(BufferedImage _image) {
         int _histogram[] = histogtam(_image);
         int _factor[] = new int[256];
-        for (int i = 0; i < _factor.length; i++) {
-            _factor[i] = 0;
-        }
+        _factor = Unitys.randArray(_factor, 0);
         long sum = 0;
         float scale = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
 
@@ -165,7 +161,7 @@ public class ImageProcessor {
     public static BufferedImage balancingImg(BufferedImage _image) {
         int new_Histogram[] = balancing(_image);
         BufferedImage output = Unitys.copyImg(_image);
-        int pixel[][] = GetPixels.getPixel(output);
+        int pixel[][] = doPixels.getPixel(output);
         int r, g, b, p;
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
@@ -262,27 +258,5 @@ public class ImageProcessor {
         return threshold;
     }
 
-    public static BufferedImage gaussianFilters(BufferedImage img) {
-        int cuttoff = 2000;
-        double magic = 1.442695;
-        int xcenter = img.getWidth() / 2 - 1;
-        int ycenter = img.getHeight() / 2 - 1;
-
-        BufferedImage dest = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-        for (int x = 0; x < img.getWidth(); x++) {
-            for (int y = 0; y < img.getHeight(); y++) {
-                int px = img.getRGB(x, y);
-
-                double distance = Math.sqrt(x * x + y * y);
-                double value = px * 255 * Math.exp((-1 * distance * distance) / (magic * cuttoff * cuttoff));
-                dest.setRGB(x, y, (int) value);
-
-            }
-        }
-
-        return dest;
-
-    }
     //----------------------------------end Fillter-------------------------------------
 }

@@ -23,4 +23,37 @@ public class Unitys {
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 
     }
+
+    //-------------------
+    public static int operation_Number(String operator, int operand1, int operand2) {
+        int _num = 0;
+        try {
+            _num = (operator.equals("+")) ? operand1 + operand2
+                    : (operator.equals("-")) ? operand1 - operand2 : (operator.equals("*")) ? operand1 * operand2
+                    : (operator.equals("/") && operand2 != 0) ? operand1 / operand2 : operand1 / operand2;
+
+        } catch (ArithmeticException e) {
+            e.getMessage();
+        }
+        return _num;
+
+    }
+
+    //-------------- set value array2D --------------------------//
+    public static int[][] randArray(int arr[][], int val) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                // set value
+                arr[i][j] = val;
+            } // end j
+        } // end i
+        return arr;
+    }
+
+    public static int[] randArray(int arr[], int val) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = val;
+        }
+        return arr;
+    }
 }
