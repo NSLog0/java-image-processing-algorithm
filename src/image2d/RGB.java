@@ -4,7 +4,6 @@
  */
 package image2d;
 
-import java.awt.image.BufferedImage;
 
 public class RGB {
 

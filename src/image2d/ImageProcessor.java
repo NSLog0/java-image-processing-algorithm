@@ -6,8 +6,6 @@ package image2d;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -218,6 +216,38 @@ public class ImageProcessor {
         return imageOutput;
 
     }
+    
+    
+     public static BufferedImage threshold(BufferedImage _image ,int _value) {
+        int _r, p, r, g, b;
+
+        double threshold = _value;
+        BufferedImage imageOutput = Unitys.copyImg(_image);
+        for (int i = 0; i < _image.getWidth(); i++) {
+            for (int j = 0; j < _image.getHeight(); j++) {
+
+                // Get pixels
+                r = new Color(_image.getRGB(i, j)).getRed();
+                int alpha = new Color(_image.getRGB(i, j)).getAlpha();
+                if (r > threshold) {
+                    p = 255;
+                } else {
+                    p = 0;
+                }
+                alpha = (alpha << 24);
+                r = (p << 16);
+                g = (p << 8);
+                b = (p);
+
+                p = alpha + r + g + b;
+                imageOutput.setRGB(i, j, p);
+
+            }
+        }
+
+        return imageOutput;
+
+    }
 // --------------------------------not ok!!! ------------------------------
 
     public static int otsuTreshold(BufferedImage _image) {
@@ -257,6 +287,5 @@ public class ImageProcessor {
         System.out.println(threshold);
         return threshold;
     }
-
     //----------------------------------end Fillter-------------------------------------
 }
