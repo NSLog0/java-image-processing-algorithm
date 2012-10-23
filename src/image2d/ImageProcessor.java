@@ -39,59 +39,7 @@ public class ImageProcessor {
     //---------------------------------end--------------------------------------
 
     // -----------------------------Convolution --------------------------------
-    public static BufferedImage convolution(BufferedImage _image, double horizon[][], double vertical[][]) {
-        BufferedImage imageOutput = new Unitys().copyImg(_image);     // Set initial BufferedImage
-        int pixel[][] = doPixels.getPixel(_image); //use to store pixels
-
-        int kernelXY = horizon.length / 2;
-        // calculate image
-        for (int i = 0 + kernelXY; i < imageOutput.getWidth() - kernelXY - 1; i++) {
-            for (int j = 0 + kernelXY; j < imageOutput.getHeight() - kernelXY - 1; j++) {
-                int a = 0, r = 0, g = 0, b = 0; // store RGB
-                int horiz = 0, verti = 0;
-                // horizontal
-                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
-                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-
-                        // calculate a RGB by chip bit
-                        a += RGB.alpha(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-                        r += RGB.red(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-
-                    } //end k
-                }//end j
-                horiz += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-
-
-                // vertical
-                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
-                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-
-                        // calculate a RGB by chip bit
-                        a += RGB.alpha(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-                        r += RGB.red(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-
-                    } //end k
-                }//end j
-                verti += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-                
-                // add x-coordinate,y-coordinate form (diff) wiht sqrt(x.diff^2)+sqrt(y.diff^2)+
-                double rgb = Math.sqrt(Math.pow(horiz, 2.0)) + Math.sqrt(Math.pow(verti, 2.0)); 
-                // set color 0-255
-                if (rgb > 255)rgb = 255;
-                if (rgb < 0)rgb = 0;
-                
-                //set RGB revert to image
-                imageOutput.setRGB(i, j, (int)rgb);
-            }// end i
-        }  //end j
-
-        return imageOutput;
-    }
-
+   
     public static BufferedImage convolution(BufferedImage _image, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
         BufferedImage imageOutput = new Unitys().copyImg(_image);     // Set initial BufferedImage
         int pixel[][] = doPixels.getPixel(_image); //use to store pixels

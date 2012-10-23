@@ -19,8 +19,10 @@ public class EdgeDetector {
         double vertical[][] = new EdgeOperator().edgeVertical();
         // copy image form original
         BufferedImage imageOutput = new Unitys().copyImg(_image);
-         
         // get result
-        return ImageProcessor.convolution(_image, horizontal, vertical);
+        return new EdgeOperator().sobelOperation(_image, horizontal, vertical);
+
     }
+    
+    
 }
