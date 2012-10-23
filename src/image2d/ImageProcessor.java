@@ -39,8 +39,61 @@ public class ImageProcessor {
     //---------------------------------end--------------------------------------
 
     // -----------------------------Convolution --------------------------------
+    public static BufferedImage convolution(BufferedImage _image, double horizon[][], double vertical[][]) {
+        BufferedImage imageOutput = new Unitys().copyImg(_image);     // Set initial BufferedImage
+        int pixel[][] = doPixels.getPixel(_image); //use to store pixels
+
+        int kernelXY = horizon.length / 2;
+        // calculate image
+        for (int i = 0 + kernelXY; i < imageOutput.getWidth() - kernelXY - 1; i++) {
+            for (int j = 0 + kernelXY; j < imageOutput.getHeight() - kernelXY - 1; j++) {
+                int a = 0, r = 0, g = 0, b = 0; // store RGB
+                int horiz = 0, verti = 0;
+                // horizontal
+                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
+                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
+
+                        // calculate a RGB by chip bit
+                        a += RGB.alpha(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+                        r += RGB.red(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+
+                    } //end k
+                }//end j
+                horiz += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+
+
+                // vertical
+                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
+                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
+
+                        // calculate a RGB by chip bit
+                        a += RGB.alpha(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+                        r += RGB.red(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+                        g += RGB.green(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+                        b += RGB.blue(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+
+                    } //end k
+                }//end j
+                verti += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+                
+                // add x-coordinate,y-coordinate form (diff) wiht sqrt(x.diff^2)+sqrt(y.diff^2)+
+                double rgb = Math.sqrt(Math.pow(horiz, 2.0)) + Math.sqrt(Math.pow(verti, 2.0)); 
+                // set color 0-255
+                if (rgb > 255)rgb = 255;
+                if (rgb < 0)rgb = 0;
+                
+                //set RGB revert to image
+                imageOutput.setRGB(i, j, (int)rgb);
+            }// end i
+        }  //end j
+
+        return imageOutput;
+    }
+
     public static BufferedImage convolution(BufferedImage _image, double kernel[][], int wigth, int height, int sizeKernel, int kernelXY) {
-        BufferedImage imageOutput = Unitys.copyImg(_image);     // Set initial BufferedImage
+        BufferedImage imageOutput = new Unitys().copyImg(_image);     // Set initial BufferedImage
         int pixel[][] = doPixels.getPixel(_image); //use to store pixels
 
         // calculate image
@@ -96,7 +149,7 @@ public class ImageProcessor {
     }
 
     public static BufferedImage grayscaleFillter(BufferedImage _image) {
-        BufferedImage imageOutput = Unitys.copyImg(_image);
+        BufferedImage imageOutput = new Unitys().copyImg(_image);
         int grays;
         int p[][] = doPixels.getPixel(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
@@ -139,7 +192,7 @@ public class ImageProcessor {
     public static int[] balancing(BufferedImage _image) {
         int _histogram[] = histogtam(_image);
         int _factor[] = new int[256];
-        _factor = Unitys.randArray(_factor, 0);
+        _factor = new Unitys().randArray(_factor, 0);
         long sum = 0;
         float scale = (float) (255.0 / (_image.getWidth() * _image.getHeight()));
 
@@ -158,7 +211,7 @@ public class ImageProcessor {
 
     public static BufferedImage balancingImg(BufferedImage _image) {
         int new_Histogram[] = balancing(_image);
-        BufferedImage output = Unitys.copyImg(_image);
+        BufferedImage output = new Unitys().copyImg(_image);
         int pixel[][] = doPixels.getPixel(output);
         int r, g, b, p;
         for (int i = 0; i < _image.getWidth(); i++) {
@@ -190,7 +243,7 @@ public class ImageProcessor {
         int _r, p, r, g, b;
 
         double threshold = otsuTreshold(_image);
-        BufferedImage imageOutput = Unitys.copyImg(_image);
+        BufferedImage imageOutput = new Unitys().copyImg(_image);
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
 
@@ -216,40 +269,8 @@ public class ImageProcessor {
         return imageOutput;
 
     }
-    
-    
-     public static BufferedImage threshold(BufferedImage _image ,int _value) {
-        int _r, p, r, g, b;
 
-        double threshold = _value;
-        BufferedImage imageOutput = Unitys.copyImg(_image);
-        for (int i = 0; i < _image.getWidth(); i++) {
-            for (int j = 0; j < _image.getHeight(); j++) {
-
-                // Get pixels
-                r = new Color(_image.getRGB(i, j)).getRed();
-                int alpha = new Color(_image.getRGB(i, j)).getAlpha();
-                if (r > threshold) {
-                    p = 255;
-                } else {
-                    p = 0;
-                }
-                alpha = (alpha << 24);
-                r = (p << 16);
-                g = (p << 8);
-                b = (p);
-
-                p = alpha + r + g + b;
-                imageOutput.setRGB(i, j, p);
-
-            }
-        }
-
-        return imageOutput;
-
-    }
-// --------------------------------not ok!!! ------------------------------
-
+    // --------------------------------not ok!!! ------------------------------
     public static int otsuTreshold(BufferedImage _image) {
         int _histogram[] = histogtam(_image);
 

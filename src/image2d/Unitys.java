@@ -16,7 +16,7 @@ public class Unitys {
 
     //----------------------------------- helper method---------------------------------
 // use to copy image 
-    public static BufferedImage copyImg(BufferedImage _image) {
+    public BufferedImage copyImg(BufferedImage _image) {
         ColorModel cm = _image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = _image.copyData(null);
@@ -25,7 +25,7 @@ public class Unitys {
     }
 
     //-------------------
-    public static int operation_Number(String operator, int operand1, int operand2) {
+    public int operation_Number(String operator, int operand1, int operand2) {
         int _num = 0;
         try {
             _num = (operator.equals("+")) ? operand1 + operand2
@@ -40,7 +40,7 @@ public class Unitys {
     }
 
     //-------------- set value array2D --------------------------//
-    public static int[][] randArray(int arr[][], int val) {
+    public int[][] randArray(int arr[][], int val) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr.length; j++) {
                 // set value
@@ -50,7 +50,7 @@ public class Unitys {
         return arr;
     }
 
-    public static int[] randArray(int arr[], int val) {
+    public int[] randArray(int arr[], int val) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = val;
         }

@@ -16,10 +16,15 @@ public class Image2D {
     public Image2D() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dim = toolkit.getScreenSize();
-        String url = "images/wl5.jpg"; // this program have 4 images : wr.png ,sh.jpg , ca.jpg , icon.jpg ,r1,r2,r3,r4.jpg
+        String url = "images/wl2.jpg"; // this program have 4 images : wr.png ,sh.jpg , ca.jpg , icon.jpg ,r1,r2,r3,r4.jpg
         BufferedImage image = ImageProcessor.load_image(url);
+        //image = ImageProcessor.gaussianFillter(image, 3, 3, 0.7);
+        //image = ImageProcessor.grayscaleFillter(image);
+        //image = ImageProcessor.balancingImg(image);
+        //image = ImageProcessor.threshold(image);
+        //image = ImageProcessor.balancingImg(image);
         image = ServiceProcess.thresholdComplete(image);
-        image = EdgeOperator.edgeHorizontal(image);
+        image = EdgeDetector.findEdgeSobel(image);
 
         JFrame frame = new JFrame("Display Image");
         ImagePanel iPanel = new ImagePanel(image);
@@ -31,6 +36,9 @@ public class Image2D {
         frame.setLocation((int) image.getWidth() / dim.width + 455, (int) image.getHeight() / dim.height);
         frame.setVisible(true);
 
+    }
+
+    public Image2D(String url) {
     }
 
     public static void main(String[] args) {
