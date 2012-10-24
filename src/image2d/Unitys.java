@@ -4,6 +4,8 @@
  */
 package image2d;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -14,9 +16,11 @@ import java.awt.image.WritableRaster;
  */
 public class Unitys {
 
+    private static int IMAGE_TYPE;
+
     //----------------------------------- helper method---------------------------------
 // use to copy image 
-    public BufferedImage copyImg(BufferedImage _image) {
+    public static BufferedImage copyImage(BufferedImage _image) {
         ColorModel cm = _image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = _image.copyData(null);
@@ -55,5 +59,13 @@ public class Unitys {
             arr[i] = val;
         }
         return arr;
+    }
+
+    public int getRGBExtended(BufferedImage image, int row, int col) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        row = Math.max(0, Math.min(height - 1, row));
+        col = Math.max(0, Math.min(width - 1, col));
+        return image.getRGB(col, row);
     }
 }

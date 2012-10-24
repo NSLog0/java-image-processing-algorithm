@@ -36,25 +36,24 @@ public class EdgeOperator {
         return sobel;
     }
     // ----------------------------- end sobel ---------------------------------
-    
-    
-    
-     public BufferedImage sobelOperation(BufferedImage _image, double horizon[][], double vertical[][]) {
-        BufferedImage imageOutput = new Unitys().copyImg(_image);     // Set initial BufferedImage
+
+    public BufferedImage sobelOperation(BufferedImage _image, double horizon[][], double vertical[][]) {
+        BufferedImage imageOutput = Unitys.copyImage(_image);     // Set initial BufferedImage
         int pixel[][] = doPixels.getPixel(_image); //use to store pixels
 
         int kernelXY = horizon.length / 2;
         // calculate image
         for (int i = 0 + kernelXY; i < imageOutput.getWidth() - kernelXY - 1; i++) {
             for (int j = 0 + kernelXY; j < imageOutput.getHeight() - kernelXY - 1; j++) {
-                int a = 0, r = 0, g = 0, b = 0; // store RGB
+                int r = 0, g = 0, b = 0; // store RGB
                 int horiz = 0, verti = 0;
+              //  int p = RGB.getRGBExtended(_image, i, j);
                 // horizontal
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
 
                         // calculate a RGB by chip bit
-                        a += RGB.alpha(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+
                         r += RGB.red(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
                         g += RGB.green(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
                         b += RGB.blue(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
@@ -70,7 +69,7 @@ public class EdgeOperator {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
 
                         // calculate a RGB by chip bit
-                        a += RGB.alpha(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+
                         r += RGB.red(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
                         g += RGB.green(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
                         b += RGB.blue(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
