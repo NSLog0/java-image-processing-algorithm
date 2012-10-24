@@ -20,7 +20,7 @@ public class Grayscale extends Filter {
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int rgb;
-                int p = RGB.getRGBExtended(_image, i, j);
+                int p = RGB.doGetRGB(_image, i, j);
 
                 rgb = (int) ((((p >> 16) & 0xFF) * 0.2125) + (((p >> 8) & 0xFF) * 0.7154) + ((p & 0xFF) * 0.0721));
                 rgb = (rgb << 16) | (rgb << 8) | (rgb);

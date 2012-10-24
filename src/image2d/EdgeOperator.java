@@ -39,24 +39,23 @@ public class EdgeOperator {
 
     public BufferedImage sobelOperation(BufferedImage _image, double horizon[][], double vertical[][]) {
         BufferedImage imageOutput = Unitys.copyImage(_image);     // Set initial BufferedImage
-        int pixel[][] = doPixels.getPixel(_image); //use to store pixels
 
         int kernelXY = horizon.length / 2;
         // calculate image
-        for (int i = 0 + kernelXY; i < imageOutput.getWidth() - kernelXY - 1; i++) {
-            for (int j = 0 + kernelXY; j < imageOutput.getHeight() - kernelXY - 1; j++) {
+        for (int i = 0; i < imageOutput.getWidth(); i++) {
+            for (int j = 0; j < imageOutput.getHeight(); j++) {
                 int r = 0, g = 0, b = 0; // store RGB
                 int horiz = 0, verti = 0;
-              //  int p = RGB.getRGBExtended(_image, i, j);
+                //  int p = RGB.getRGBExtended(_image, i, j);
                 // horizontal
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-
+                        int p = RGB.doGetRGB(_image, i + k, j + l);
                         // calculate a RGB by chip bit
 
-                        r += RGB.red(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i - k, j - l) * horizon[k + kernelXY][l + kernelXY];
+                        r += ((p >> 16) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        g += ((p >> 8) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        b += (p & 0xff) * horizon[k + kernelXY][l + kernelXY];
 
                     } //end k
                 }//end j
@@ -67,12 +66,12 @@ public class EdgeOperator {
                 // vertical
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-
+                        int p = RGB.doGetRGB(_image, i + k, j + l);
                         // calculate a RGB by chip bit
 
-                        r += RGB.red(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-                        g += RGB.green(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
-                        b += RGB.blue(pixel, i - k, j - l) * vertical[k + kernelXY][l + kernelXY];
+                        r += ((p >> 16) & 0xff) * vertical[k + kernelXY][l + kernelXY];
+                        g += ((p >> 8) & 0xff) * vertical[k + kernelXY][l + kernelXY];
+                        b += (p & 0xff) * vertical[k + kernelXY][l + kernelXY];
 
                     } //end k
                 }//end j

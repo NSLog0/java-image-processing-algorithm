@@ -26,7 +26,7 @@ public class Erosion extends Filter {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
                 if (i * i + j * j <= radius2) {
-                    int c = new Unitys().getRGBExtended(image, col + i, row + j);
+                    int c = new Unitys().getRGBExtended(image, row + i, col + j);
                     minR = Math.min(minR, (c >> 16) & 0xFF);
                     minG = Math.min(minG, (c >> 8) & 0xFF);
                     minB = Math.min(minB,  c & 0xFF);

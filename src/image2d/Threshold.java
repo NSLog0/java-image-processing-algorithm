@@ -23,7 +23,7 @@ public class Threshold extends Filter {
             for (int j = 0; j < _image.getHeight(); j++) {
 
                 // Get pixels
-                r = RGB.getRGBExtended(_image, i, j);
+                r = RGB.doGetRGB(_image, i, j);
                 r = ((r >> 16) & 0xff);
                 int alpha = new Color(_image.getRGB(i, j)).getAlpha();
                 if (r > threshold) {
@@ -87,7 +87,7 @@ public class Threshold extends Filter {
         int interval[] = new int[256];
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
-                int p = RGB.getRGBExtended(_image, i, j);
+                int p = RGB.doGetRGB(_image, i, j);
                 int r = (p >> 16) & 0xff;
                 interval[r]++;
             }

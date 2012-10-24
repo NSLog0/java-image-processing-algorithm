@@ -26,7 +26,7 @@ public class Dilation extends Filter {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
                 if (i * i + j * j <= radius2) {
-                    int c = new Unitys().getRGBExtended(image, col + i, row + j);
+                    int c = new Unitys().getRGBExtended(image, row + i, col + j);
                     maxR = Math.max(maxR, (c >> 16) & 0xFF);
                     maxG = Math.max(maxG, (c >> 8) & 0xFF);
                     maxB = Math.max(maxB, c & 0xFF);
