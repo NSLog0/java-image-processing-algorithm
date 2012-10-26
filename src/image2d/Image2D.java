@@ -18,11 +18,12 @@ public class Image2D {
         Dimension dim = toolkit.getScreenSize();
         String url = "images/wl2.jpg"; // this program have 4 images : wr.png ,sh.jpg , ca.jpg , icon.jpg ,r1,r2,r3,r4.jpg
         BufferedImage image = ImageReader.load_image(url);
-        image = new Gaussian(0.84089642, 7).apply(image); //.94089642
-        image = new Grayscale().apply(image);
-        image = new Threshold().apply(image);
-        image = new Opening(2).apply(image);
-        //image = new Closing(7).apply(image);
+        image = Gaussian.apply(image, 7, 0.84089642); //.94089642
+        image = Grayscale.apply(image);
+        // image = AutoBalance.apply(image);
+        image = Threshold.apply(image);
+        image = Opening.apply(image, 3);
+        image = Opening.apply(image, 3);
         image = EdgeDetector.findEdgeSobel(image);
 
         JFrame frame = new JFrame("Display Image");
@@ -34,11 +35,12 @@ public class Image2D {
         frame.setSize(image.getWidth() + 8, image.getHeight() + 34);
         frame.setLocation((int) image.getWidth() / dim.width + 455, (int) image.getHeight() / dim.height);
         frame.setVisible(true);
-
+    
     }
 
     public static void main(String[] args) {
         Image2D i = new Image2D();
+        
 
     }
 }

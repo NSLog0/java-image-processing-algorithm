@@ -10,20 +10,11 @@ import java.awt.image.BufferedImage;
  *
  * @author pratchaya
  */
-public class Gaussian extends Filter {
-
-    double sigma = 0;
-    int size = 3;
-
-    public Gaussian(double sigma, int size) {
-        this.sigma = sigma;
-        this.size = size;
-    }
+public class Gaussian {
 
     public static double[][] kernel(int _size, double sigma) {
 
         int size = _size;
-        int _height = 5;
         double gaussian[][] = new double[size][size];
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
@@ -47,15 +38,14 @@ public class Gaussian extends Filter {
         return kernel_sum;
     }
 
-    @Override
-    public BufferedImage apply(BufferedImage _image) {
+    public static BufferedImage apply(BufferedImage _image, int size, double sigma) {
 
-        BufferedImage imageOutput = Unitys.copyImage(_image);     // Set initial BufferedImage
+        BufferedImage imageOutput = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);   // Set initial BufferedImage
+        // Set initial BufferedImage
         int c = 0;
 
         double gaussian[][] = Gaussian.kernel(size, sigma);
         double agv = Gaussian.kernel_sum(gaussian);
-        System.out.println(agv);
         int wight = _image.getWidth(); // image wight
         int heigth = _image.getHeight(); // image hight 
         int kernelSize = gaussian.length; // size kernel
@@ -67,21 +57,18 @@ public class Gaussian extends Filter {
             for (int j = 0; j < heigth; j++) {
                 int r = 0, g = 0, b = 0; // store RGB
 
-                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
-                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-                        int p = RGB.doGetRGB(_image, i + k, j + l);
-                        // calculate a RGB by chip bit
-                        r += ((p >> 16) & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
-                        g += ((p >> 8) & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
-                        b += (p & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
-
-                    } //end k
-                }//end j
-                r = (int) (r / agv);
-                g = (int) (g / agv);
-                b = (int) (b / agv);
-                int rgb = (((int)(r /agv) & 0xff) << 16) | (((int)(g/agv) & 0xff) << 8) | ((int)(b/agv) & 0xff);
-
+                for (int k = -kernelXY; k <= kernelXY; k++) {
+                    for (int l = -kernelXY; l <= kernelXY; l++) {
+                        if (k * k + l * l < gaussian.length * gaussian.length) {
+                            int p = RGB.getRGBW(_image, i + k, j + l);
+                            // calculate a RGB by chip bit
+                            r += ((p >> 16) & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
+                            g += ((p >> 8) & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
+                            b += (p & 0xFF) * gaussian[k + kernelXY][l + kernelXY];
+                        }
+                    } //end l
+                }//end k
+                int rgb = ((int) (r / agv) << 16) | ((int) (g / agv) << 8) | ((int) (b / agv));
                 //set RGB revert to image
                 imageOutput.setRGB(i, j, rgb);
             }// end i

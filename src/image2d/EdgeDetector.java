@@ -15,14 +15,11 @@ public class EdgeDetector {
 
     public static BufferedImage findEdgeSobel(BufferedImage _image) {
         // get kernel horizontal
-        double horizontal[][] = new EdgeOperator().edgeHorizontal();
+        double horizontal[][] = EdgeOperator.edgeHorizontal();
         // get kernel vertical
-        double vertical[][] = new EdgeOperator().edgeVertical();
-        // copy image form original
-        BufferedImage imageOutput = Unitys.copyImage(_image);
+        double vertical[][] = EdgeOperator.edgeVertical();
         // get result
-        return new EdgeOperator().sobelOperation(_image, horizontal, vertical);
+        return EdgeOperator.sobelOperation(_image, horizontal, vertical);
 
     }
-
 }

@@ -24,8 +24,7 @@ public class ImageReader {
             // read file form BufferedImage
             image = ImageIO.read(new File(url));
             if (!image.equals(null)) {
-                System.out.println("Load data at URL:" + url + " done.");
-
+             
             }
 
         } catch (Exception e) {

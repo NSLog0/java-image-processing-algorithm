@@ -6,37 +6,30 @@ package image2d;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  *
  * @author pratchaya
  */
-public class Threshold extends Filter {
+public class Threshold {
 
-    @Override
-    public BufferedImage apply(BufferedImage _image) {
+    public static BufferedImage apply(BufferedImage _image) {
         int _r, p, r, g, b;
         double threshold = otsuTreshold(_image);
-        BufferedImage imageOutput = Unitys.copyImage(_image);
+        BufferedImage imageOutput = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);   // Set initial BufferedImage
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
 
                 // Get pixels
-                r = RGB.doGetRGB(_image, i, j);
+                r = RGB.getRGBW(_image, i, j);
                 r = ((r >> 16) & 0xff);
-                int alpha = new Color(_image.getRGB(i, j)).getAlpha();
+
                 if (r > threshold) {
                     p = 255;
                 } else {
                     p = 0;
                 }
-                alpha = (alpha << 24);
-                r = (p << 16);
-                g = (p << 8);
-                b = (p);
-
-                p = alpha + r + g + b;
+                p = (p << 16) | (p << 8) | (p);
                 imageOutput.setRGB(i, j, p);
 
             }
@@ -46,7 +39,7 @@ public class Threshold extends Filter {
     }
 
     public static int otsuTreshold(BufferedImage _image) {
-        int _histogram[] = histogtam(_image);
+        int _histogram[] = Histogram.histogtam(_image);
 
         int total = _image.getWidth() * _image.getHeight();
         float sum = 0;
@@ -79,22 +72,6 @@ public class Threshold extends Filter {
                 threshold = i;
             }
         }
-        System.out.println(threshold);
         return threshold;
-    }
-
-    public static int[] histogtam(BufferedImage _image) {
-        int interval[] = new int[256];
-        for (int i = 0; i < _image.getWidth(); i++) {
-            for (int j = 0; j < _image.getHeight(); j++) {
-                int p = RGB.doGetRGB(_image, i, j);
-                int r = (p >> 16) & 0xff;
-                interval[r]++;
-            }
-
-        }
-
-        return interval;
-
     }
 }
