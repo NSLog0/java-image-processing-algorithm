@@ -15,9 +15,9 @@ public class EdgeOperator {
 
     // ---------------------------- sobel --------------------------------------
     // ** this template for sobel **
-    public static double[][] edgeHorizontal() {
+    public static int[][] edgeHorizontal() {
 
-        double sobel[][] = {
+        int sobel[][] = {
             {-1, -2, -1},
             {0, 0, 0},
             {1, 2, 1}
@@ -26,8 +26,8 @@ public class EdgeOperator {
         return sobel;
     }
 
-    public static  double[][] edgeVertical() {
-        double sobel[][] = {
+    public static  int[][] edgeVertical() {
+        int sobel[][] = {
             {-1, 0, 1},
             {-2, 0, 2},
             {-1, 0, 1}
@@ -37,7 +37,7 @@ public class EdgeOperator {
     }
     // ----------------------------- end sobel ---------------------------------
 
-    public static BufferedImage sobelOperation(BufferedImage _image, double horizon[][], double vertical[][]) {
+    public static BufferedImage sobelOperation(BufferedImage _image, int horizon[][], int vertical[][]) {
         BufferedImage imageOutput = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);   // Set initial BufferedImage
 
         int kernelXY = horizon.length / 2;
@@ -53,9 +53,9 @@ public class EdgeOperator {
                         int p = RGB.getRGBW(_image, i + k, j + l);
                         // calculate a RGB by chip bit
 
-                        r += ((p >> 16) & 0xff) * horizon[k + kernelXY][l + kernelXY];
-                        g += ((p >> 8) & 0xff) * horizon[k + kernelXY][l + kernelXY];
-                        b += (p & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        r += ((p >> 16) & 0xff) * vertical[k + kernelXY][l + kernelXY];
+                        g += ((p >> 8) & 0xff) * vertical[k + kernelXY][l + kernelXY];
+                        b += (p & 0xff) * vertical[k + kernelXY][l + kernelXY];
 
                     } //end k
                 }//end j
@@ -69,9 +69,9 @@ public class EdgeOperator {
                         int p = RGB.getRGBW(_image, i + k, j + l);
                         // calculate a RGB by chip bit
 
-                        r += ((p >> 16) & 0xff) * vertical[k + kernelXY][l + kernelXY];
-                        g += ((p >> 8) & 0xff) * vertical[k + kernelXY][l + kernelXY];
-                        b += (p & 0xff) * vertical[k + kernelXY][l + kernelXY];
+                        r += ((p >> 16) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        g += ((p >> 8) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        b += (p & 0xff) * horizon[k + kernelXY][l + kernelXY];
 
                     } //end k
                 }//end j

@@ -15,9 +15,9 @@ public class EdgeDetector {
 
     public static BufferedImage findEdgeSobel(BufferedImage _image) {
         // get kernel horizontal
-        double horizontal[][] = EdgeOperator.edgeHorizontal();
+        int horizontal[][] = EdgeOperator.edgeHorizontal();
         // get kernel vertical
-        double vertical[][] = EdgeOperator.edgeVertical();
+        int vertical[][] = EdgeOperator.edgeVertical();
         // get result
         return EdgeOperator.sobelOperation(_image, horizontal, vertical);
 

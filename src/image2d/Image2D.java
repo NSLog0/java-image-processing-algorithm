@@ -21,9 +21,10 @@ public class Image2D {
         image = Gaussian.apply(image, 7, 0.84089642); //.94089642
         image = Grayscale.apply(image);
         // image = AutoBalance.apply(image);
-        image = Threshold.apply(image);
-        image = Opening.apply(image, 3);
-        image = Opening.apply(image, 3);
+          image = Threshold.apply(image);
+          image = Opening.apply(image, 3);
+          image = Opening.apply(image, 3);
+       //   image = NewClass.h(image, EdgeOperator.edgeVertical());
         image = EdgeDetector.findEdgeSobel(image);
 
         JFrame frame = new JFrame("Display Image");
@@ -35,12 +36,12 @@ public class Image2D {
         frame.setSize(image.getWidth() + 8, image.getHeight() + 34);
         frame.setLocation((int) image.getWidth() / dim.width + 455, (int) image.getHeight() / dim.height);
         frame.setVisible(true);
-    
+
     }
 
     public static void main(String[] args) {
         Image2D i = new Image2D();
-        
+
 
     }
 }
