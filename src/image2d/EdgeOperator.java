@@ -44,38 +44,31 @@ public class EdgeOperator {
         // calculate image
         for (int i = 0; i < imageOutput.getWidth(); i++) {
             for (int j = 0; j < imageOutput.getHeight(); j++) {
-                int r = 0, g = 0, b = 0; // store RGB
+                int r = 0, g = 0, b = 0 , _r = 0 , _g = 0 , _b = 0; // store RGB
                 int horiz = 0, verti = 0;
                 //  int p = RGB.getRGBExtended(_image, i, j);
-                // horizontal
+                
                 for (int k = -(kernelXY); k < kernelXY + 1; k++) {
                     for (int l = -(kernelXY); l < kernelXY + 1; l++) {
                         int p = RGB.getRGBW(_image, i + k, j + l);
-                        // calculate a RGB by chip bit
-
+                        // calculate a RGB by ship bit
+                        // horizontal
                         r += ((p >> 16) & 0xff) * vertical[k + kernelXY][l + kernelXY];
                         g += ((p >> 8) & 0xff) * vertical[k + kernelXY][l + kernelXY];
                         b += (p & 0xff) * vertical[k + kernelXY][l + kernelXY];
 
+                        // verticel 
+                        _r += ((p >> 16) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        _g += ((p >> 8) & 0xff) * horizon[k + kernelXY][l + kernelXY];
+                        _b += (p & 0xff) * horizon[k + kernelXY][l + kernelXY];
+
                     } //end k
                 }//end j
                 horiz += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+                verti += ((_r & 0xff) << 16) | ((_g & 0xff) << 8) | (_b & 0xff);
 
 
-
-                // vertical
-                for (int k = -(kernelXY); k < kernelXY + 1; k++) {
-                    for (int l = -(kernelXY); l < kernelXY + 1; l++) {
-                        int p = RGB.getRGBW(_image, i + k, j + l);
-                        // calculate a RGB by chip bit
-
-                        r += ((p >> 16) & 0xff) * horizon[k + kernelXY][l + kernelXY];
-                        g += ((p >> 8) & 0xff) * horizon[k + kernelXY][l + kernelXY];
-                        b += (p & 0xff) * horizon[k + kernelXY][l + kernelXY];
-
-                    } //end k
-                }//end j
-                verti += ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+           
 
                 // add x-coordinate,y-coordinate form (diff) wiht sqrt(x.diff^2)+sqrt(y.diff^2)+
                 double rgb = Math.sqrt(Math.pow(horiz, 2.0)) + Math.sqrt(Math.pow(verti, 2.0));
@@ -87,6 +80,7 @@ public class EdgeOperator {
                     rgb = 0;
                 }
                 Color c = new Color((int) rgb, (int) rgb, (int) rgb);
+
                 //set RGB revert to image
                 imageOutput.setRGB(i, j, (int) c.getRGB());
             }// end i
