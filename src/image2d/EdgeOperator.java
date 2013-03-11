@@ -37,7 +37,7 @@ public class EdgeOperator {
     }
     // ----------------------------- end sobel ---------------------------------
 
-    public static BufferedImage sobelOperation(BufferedImage _image, int horizon[][], int vertical[][]) {
+    public static BufferedImage apply(BufferedImage _image, int horizon[][], int vertical[][]) {
         BufferedImage imageOutput = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);   // Set initial BufferedImage
 
         int kernelXY = horizon.length / 2;

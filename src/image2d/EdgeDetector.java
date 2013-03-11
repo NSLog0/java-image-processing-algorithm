@@ -13,13 +13,13 @@ import java.awt.image.BufferedImage;
  */
 public class EdgeDetector {
 
-    public static BufferedImage findEdgeSobel(BufferedImage _image) {
+    public static BufferedImage EdgeSobel(BufferedImage _image) {
         // get kernel horizontal
         int horizontal[][] = EdgeOperator.edgeHorizontal();
         // get kernel vertical
         int vertical[][] = EdgeOperator.edgeVertical();
         // get result
-        return EdgeOperator.sobelOperation(_image, horizontal, vertical);
+        return EdgeOperator.apply(_image, horizontal, vertical);
 
     }
 }

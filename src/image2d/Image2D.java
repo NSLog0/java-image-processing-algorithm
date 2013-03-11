@@ -16,17 +16,17 @@ public class Image2D {
     public Image2D() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dim = toolkit.getScreenSize();
-        String url = "images/wl2.jpg"; // this program have 4 images : wr.png ,sh.jpg , ca.jpg , icon.jpg ,r1,r2,r3,r4.jpg
+        String url = "C:\\javacv-bin\\samples\\rice.jpg"; // this program have 4 images : wr.png ,sh.jpg , ca.jpg , icon.jpg ,r1,r2,r3,r4.jpg
         BufferedImage image = ImageReader.load_image(url);
         image = Gaussian.apply(image, 7, 0.84089642); //.94089642
         image = Grayscale.apply(image);
-        //image = AutoBalance.apply(image);
-        image = Threshold.apply(image);
-        image = Opening.apply(image, 3);
-        image = Opening.apply(image, 3);
-        image = Opening.apply(image, 3);
-        image = Closing.apply(image, 2);
-        image = EdgeDetector.findEdgeSobel(image);
+       // image = AutoBalance.apply(image);
+          image = Threshold.apply(image);
+         image = Opening.apply(image, 3);
+            image = Opening.apply(image, 3);
+            image = Opening.apply(image, 3);
+        //   image = Closing.apply(image, 2);
+            //image = EdgeDetector.EdgeSobel(image);
 
         // swing for tester {
         JFrame frame = new JFrame("Display Image");
