@@ -1,11 +1,11 @@
 # Image Processing with java
 ##About this project
-This code I was developed on 3-4 years ago, When I study on junior in University. My purpose to use in Senior project, So now I don't work about image processing field anymore, I decided to open for everyone who interested in image processing to lean form my code. 
+The code I was developing on 3-4 years ago, While I studied on Third years in University. My purpose is to use the code in Senior project. Now I don't work in image processing field anymore. I decided to open code for everyone who is interesting in image processing. I want people to lean from my code. 
 
-This project develop on pure java, basic concept about image processing and basic mathematical formula 
+This project develop by using java, image processing concept and basic mathematical formula 
 
 
-#What's inside the project
+#What's inside the project.
 ###Image2D.java 
 Main class, show example to use function
 
