@@ -79,7 +79,7 @@ I follow by this link to implement canny edge and use convolution method to appl
 
 ##Read pixel color value 
 ###RGB.java
-If you get value of pixle from RGB.java to access RGB value on Dicimal digit, You must use bitwise operators to shitf bit. R >> 16 , G >> 8 and B, Then add maksk by (& 0xFF), See example in below link or file this project 
+If you get value of pixle from RGB.java to access RGB value on Dicimal digit, You must use bitwise operators to shitf bit. R >> 16 , G >> 8 and B, Then add mask by (& 0xFF), See example in below link or file this project 
 #####link 
 * http://stackoverflow.com/questions/22391353/get-color-of-each-pixel-of-an-image-using-bufferedimages
 * http://stackoverflow.com/questions/6524196/java-get-pixel-array-from-image
