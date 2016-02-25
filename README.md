@@ -82,8 +82,9 @@ I follow by this link to implement canny edge and use convolution method to appl
 
 #Convoluion 
 ##To apply vaule to image, You must have understand Convoluion method
-https://en.wikipedia.org/wiki/Convolution
-http://mathworld.wolfram.com/Convolution.html
+* https://en.wikipedia.org/wiki/Convolution
+* http://mathworld.wolfram.com/Convolution.html
+* http://www.songho.ca/dsp/convolution/convolution.html
 
 ## License
 
