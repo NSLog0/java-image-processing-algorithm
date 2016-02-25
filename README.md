@@ -5,8 +5,7 @@ This code I was developed on 3-4 years ago, When I study on junior in University
 This project develop on pure java, basic concept about image processing and basic mathematical formula 
 
 
-#What's inside the project 
-####Not Complete
+#What's inside the project
 ###Image2D.java 
 Main class, show example to use function
 
@@ -54,7 +53,7 @@ I follow by this link to implement canny edge and use convolution method to appl
 
 ####Definetion on OpenCv website
 * http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html
-* 
+
 ###AutoBalance.java
 #####link
 * https://en.wikipedia.org/wiki/Color_balance
