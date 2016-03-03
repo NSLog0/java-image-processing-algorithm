@@ -33,7 +33,7 @@ The algorithm for convert image to gray color, In this file I use Luminosity met
 * https://en.wikipedia.org/wiki/Histogram
 
 ###Threshold.java
-The algorithm to convert image to binary color , In this file I use Otsu's method,
+The algorithm to convert image to binary color (Separates pixels in an image into a foreground and background) , In this file I use Otsu's method,
 However you must have understand about histogram first cause by threshold algorithm base on histogram
 #####understand about Threshold 
 * https://en.wikipedia.org/wiki/Thresholding_(image_processing)
