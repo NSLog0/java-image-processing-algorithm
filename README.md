@@ -16,9 +16,9 @@ The algorithm for bluring image, I use Gaussian distribution method
 *  http://www.pixelstech.net/article/1353768112-Gaussian-Blur-Algorithm
 *  http://blog.ivank.net/fastest-gaussian-blur.html
 
-###Grayscale.java
+### Grayscale.java
 The algorithm for convert image to gray color, In this file I use Luminosity method, However I can read other method and example at below link
-#####Link
+##### Link
 * https://en.wikipedia.org/wiki/Grayscale
 * http://developer.bostjan-cigan.com/java-color-image-to-grayscale-conversion-algorithm/
 * http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
